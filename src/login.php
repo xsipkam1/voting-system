@@ -1,0 +1,87 @@
+<?php
+session_start();
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    header("location: index.php");
+    exit;
+}
+
+require_once("../../../configFinal.php");
+
+$errors = [];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $login = trim($_POST['login']);
+    $password = $_POST['password'];
+    if (empty($login)) {
+        $errors[] = "Login je povinný.";
+    } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $login)) {
+        $errors[] = "Login môže obsahovať iba písmená, číslice a podčiarkovníky.";
+    }
+    if (empty($password)) {
+        $errors[] = "Heslo je povinné.";
+    } elseif (strlen($password) < 6) {
+        $errors[] = "Heslo musí mať aspoň 6 znakov.";
+    }
+    if (empty($errors)) {
+        $sql = "SELECT login, password, role FROM users WHERE login = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "s", $login);
+        mysqli_stmt_execute($stmt);
+
+        mysqli_stmt_store_result($stmt);
+        if (mysqli_stmt_num_rows($stmt) == 1) {
+            mysqli_stmt_bind_result($stmt, $login, $hashed_password, $role);
+            mysqli_stmt_fetch($stmt);
+            if (password_verify($password, $hashed_password)) {
+                $_SESSION["loggedin"] = true;
+                $_SESSION["login"] = $login;
+                $_SESSION["role"] = $role;
+                header("location: index.php");
+                exit;
+            } else {
+                $errors[] = "Nesprávne meno alebo heslo.";
+            }
+        } else {
+            $errors[] = "Nesprávne meno alebo heslo.";
+        }
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<?php include "menu.php"; ?>
+<div class="out-cont">
+    <h2>Prihlásenie</h2>
+    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+
+        <div class="detail">
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login">
+        </div>
+        <div class="detail">
+            <label for="password">Heslo:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div class="buttons">
+            <input type="submit" value="Prihlásiť">
+        </div>
+        <?php
+        if (!empty($errors)) {
+            echo '<div class="error">' . implode("<br>", $errors) . '</div>';
+        }
+        ?>
+    </form>
+</div>
+</body>
+</html>

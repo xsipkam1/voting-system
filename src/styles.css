@@ -100,3 +100,13 @@ form input[type="submit"]:hover {
     justify-content: center;
 
 }
+
+@media (max-width: 991px) {
+    .first-row {
+        display: none;
+    }
+    .other-row {
+        display: flex;
+        flex-direction: column;
+    }
+}

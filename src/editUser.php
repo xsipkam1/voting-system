@@ -10,6 +10,7 @@ if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSIO
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = $_POST['userId'];
     $newRole = $_POST["userRole"];
+    $newPassword = $_POST["userPassword"];
 
     $sql = "UPDATE users SET role = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
@@ -17,6 +18,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt->execute();
     $stmt->close();
+
+    if (!empty($newPassword)) {
+        $hashedPassword = password_hash($newPassword, PASSWORD_ARGON2ID);
+        $sqlUpdatePassword = "UPDATE users SET password = ? WHERE id = ?";
+        $stmtUpdatePassword = $conn->prepare($sqlUpdatePassword);
+        $stmtUpdatePassword->bind_param("si", $hashedPassword, $userId);
+        $stmtUpdatePassword->execute();
+        $stmtUpdatePassword->close();
+    }
+
     $_SESSION['roleUpdateSuccess'] = true;
     header("Location: manageUsers.php");
     exit;

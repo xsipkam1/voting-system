@@ -132,6 +132,10 @@ $result = $conn->query($sql);
                 <div class="modal-body">
                     <form action="editUser.php" method="post" class="p-0 m-0 shadow-none">
                         <input type="hidden" id="editUserId" name="userId">
+                        <div class="mb-3">
+                            <label for="editUserPassword" class="form-label">Heslo</label>
+                            <input type="password" class="form-control" id="editUserPassword" name="userPassword" placeholder="Nové heslo">
+                        </div>
                         <div class="mb-3 b-0">
                             <label for="editUserRole" class="form-label">ROLA</label>
                             <select class="form-select" id="editUserRole" name="userRole">
@@ -168,6 +172,7 @@ $result = $conn->query($sql);
                     const userId = this.getAttribute('data-user-id');
                     const userLogin = this.getAttribute('data-user-login');
                     document.getElementById('editUserId').value = userId;
+                    document.getElementById('editUserPassword').value = '';
                 });
             });
         });

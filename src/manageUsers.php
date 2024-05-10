@@ -29,9 +29,9 @@ $result = $conn->query($sql);
         <table class="table border shadow table-striped text-center">
             <thead>
                 <tr class="first-row">
-                    <th>ID</th>
-                    <th>LOGIN</th>
-                    <th>AKCIA</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">LOGIN</th>
+                    <th scope="col">AKCIA</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,11 +39,11 @@ $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while($row = $result->fetch_assoc()) {
                         echo "<tr class='other-row'>";
-                        echo "<td>" . $row["id"] . "</td>";
-                        echo "<td>" . $row["login"] . "</td>";
-                        echo "<td>";
-                        echo "<a href='updateUser.php?id=" . $row["id"] . "' class='btn btn-outline-primary btn-sm'>UPRAVIŤ</a>";
-                        echo "<a href='deleteUser.php?id=" . $row["id"] . "' class='btn btn-outline-danger btn-sm ms-1'>VYMAZAŤ</a>";
+                        echo "<td class='col-lg-2'>" . $row["id"] . "</td>";
+                        echo "<td class='col-lg-6'>" . $row["login"] . "</td>";
+                        echo "<td class='col-lg-4'>";
+                        echo "<button type='button' class='btn btn-outline-primary btn-sm edit-button' data-bs-toggle='modal' data-bs-target='#editUserModal' data-user-id='" . $row["id"] . "' data-user-login='" . $row["login"] . "'>UPRAVIŤ</button>";
+                        echo "<a href='#' class='btn btn-outline-danger btn-sm ms-1 delete-button' data-user-id='" . $row["id"] . "'>ZMAZAŤ</a>";
                         echo "</td>";
                         echo "</tr>";
                     }
@@ -55,4 +55,136 @@ $result = $conn->query($sql);
         </table>
     </div>
 
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h3 class="modal-title w-100" id="confirmDeleteModalLabel">POTVRĎTE VYMAZANIE</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    Naozaj chcete vymazať tohto používateľa?
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <form action="deleteUser.php" method="post" class="p-0 m-0">
+                        <input type="hidden" name="userId" id="deleteUserId">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZRUŠIŤ</button>
+                        <button type="submit" class="btn btn-outline-danger">ZMAZAŤ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deletionSuccessModal" tabindex="-1" aria-labelledby="deletionSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h3 class="modal-title w-100" id="deletionSuccessModalLabel">ÚSPEŠNE VYMAZANÉ</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <?php
+                    if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']) {
+                        echo "Uspešne ste odstránili používateľa.";
+                    } else {
+                        echo "Pri odstráňovaní používateľa nastala chyba.";
+                    }
+                    ?>
+                </div>
+                <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="roleUpdateSuccessModal" tabindex="-1" aria-labelledby="roleUpdateSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel">ÚSPEŠNE ZMENENÉ</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <?php
+                    if (isset($_SESSION['roleUpdateSuccess']) && $_SESSION['roleUpdateSuccess']) {
+                        echo "Uspešne ste zmenili používateľa.";
+                    } else {
+                        echo "Pri menení informácií o používateľovi nastala chyba.";
+                    }
+                    ?>
+                </div>
+                <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h3 class="modal-title w-100" id="editUserModalLabel">UPRAVIŤ POUŽÍVATEĽA</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="editUser.php" method="post" class="p-0 m-0 shadow-none">
+                        <input type="hidden" id="editUserId" name="userId">
+                        <div class="mb-3 b-0">
+                            <label for="editUserRole" class="form-label">ROLA</label>
+                            <select class="form-select" id="editUserRole" name="userRole">
+                                <option value="U">U</option>
+                                <option value="A">A</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZATVORIŤ</button>
+                            <button type="submit" class="btn btn-outline-primary">ULOŽIŤ</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const deleteButtons = document.querySelectorAll('.delete-button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-user-id');
+                    document.getElementById('deleteUserId').value = userId;
+                    const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+                    modal.show();
+                });
+            });
+
+            const editButtons = document.querySelectorAll('.edit-button');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-user-id');
+                    const userLogin = this.getAttribute('data-user-login');
+                    document.getElementById('editUserId').value = userId;
+                });
+            });
+        });
+
+        <?php if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']): ?>
+            const deletionSuccessModal = new bootstrap.Modal(document.getElementById('deletionSuccessModal'));
+            deletionSuccessModal.show();
+            <?php unset($_SESSION['deletionSuccess']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['roleUpdateSuccess'])): ?>
+            const roleUpdateSuccessModal = new bootstrap.Modal(document.getElementById('roleUpdateSuccessModal'));
+            roleUpdateSuccessModal.show();
+            <?php unset($_SESSION['roleUpdateSuccess']); ?>
+        <?php endif; ?>
+
+    </script>
+
 </body>
+</html>

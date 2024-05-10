@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
+        $_SESSION['registrationSuccess'] = true;
     }
 }
 
@@ -58,11 +59,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
 <?php include "menu.php"; ?>
 <div class="out-cont">
-    <h2>Registrácia</h2>
+    <h2>REGISTRÁCIA</h2>
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
 
         <div class="detail">
@@ -88,5 +91,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     </form>
 </div>
+
+<div class="modal fade" id="registrationSuccessModal" tabindex="-1" aria-labelledby="registrationSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h3 class="modal-title w-100" id="registrationSuccessModalLabel">REGISTRÁCIA ÚSPEŠNÁ</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                Váš účet bol úspešne vytvorený. Teraz sa môžete prihlásiť pod loginom, ktorý ste si zvolili.
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    <?php if (isset($_SESSION['registrationSuccess']) && $_SESSION['registrationSuccess'] === true) : ?>
+        var registrationSuccessModal = new bootstrap.Modal(document.getElementById('registrationSuccessModal'));
+        registrationSuccessModal.show();
+        <?php unset($_SESSION['registrationSuccess']); ?>
+    <?php endif; ?>
+</script>
+
 </body>
 </html>
+

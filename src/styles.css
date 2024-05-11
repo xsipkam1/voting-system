@@ -101,6 +101,23 @@ form input[type="submit"]:hover {
 
 }
 
+.dropdown {
+    width: 40%;
+}
+
+.dropdown .input-group-text {
+    border-right: 0 !important;
+    border-radius: 5px 0px 0px 5px !important;
+}
+
+.dropdown .form-select {
+    border-radius: 0px 5px 5px 0px !important;
+}
+
+.bg-dark-custom {
+    background-color: #eeeeee;
+}
+
 @media (max-width: 991px) {
     .first-row {
         display: none;
@@ -108,5 +125,20 @@ form input[type="submit"]:hover {
     .other-row {
         display: flex;
         flex-direction: column;
+    }
+    .dropdown {
+        width: 100%;
+    }
+    .filter-options > .dropdown {
+        margin-left: 0 !important;
+    }
+    .filter-options {
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .question-buttons {
+        flex-direction: column !important;
     }
 }

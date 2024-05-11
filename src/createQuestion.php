@@ -33,12 +33,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($errors)) {
         $description = ($_POST['question-type'] === 'list') ? $_POST['question'] : $_POST['question_open'];
+        $subject = ($_POST['question-type'] === 'list') ? $_POST['question-subject'] : $_POST['question_open-subject'];
+        $active = isset($_POST['active-checkbox']) ? true : false;
         $type = $_POST['question-type'];
         $user_fk = $_SESSION['id'];
+        if ($_POST['question-type'] === 'list') {
+            $active = isset($_POST['active-checkbox']) ? true : false;
+        } elseif ($_POST['question-type'] === 'text') {
+            $active = isset($_POST['active-checkbox2']) ? true : false;
+        }
 
-        $sql = "INSERT INTO questions (description, type, user_fk) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO questions (description, type, user_fk, subject, date_created, active) VALUES (?, ?, ?, ?, NOW(), ?)";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "sss", $description,  $type, $user_fk);
+        mysqli_stmt_bind_param($stmt, "ssssi", $description,  $type, $user_fk, $subject, $active);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 
@@ -82,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php include "menu.php"; ?>
 <div class="out-cont">
     <h2>VYTVORENIE NOVEJ OTÁZKY</h2>
-    <form id="question-form" method="post">
+    <form id="question-form" method="post" class="mt-4">
 
         <div class="radio-buttons">
             <label><input type="radio" name="question-type" value="list" checked> Otázka s výberom odpovede</label>
@@ -96,6 +103,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="question">Popis otázky:</label>
                 <input type="text" id="question" name="question">
             </div>
+            <div class="detail">
+                <label for="question-subject">Predmet:</label>
+                <input type="text" id="question-subject" name="question-subject">
+            </div>
             <div id="answers-container">
                 <div class="detail">
                     <label for="answer1">Možná odpoveď 1:</label>
@@ -105,7 +116,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="answer2">Možná odpoveď 2:</label>
                     <input type="text" id="answer2" name="answer2">
                 </div>
+
             </div>
+            <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" value="0" id="active-checkbox" name="active-checkbox" checked>
+                    <label class="form-check-label" for="active-checkbox">
+                        Aktívna otázka
+                    </label>
+                </div>
             <button type="button" id="add-answer" class="btn border border-secondary">+ Pridať možnú odpoveď</button>
             <button type="button" id="minus-answer" style="display: none;" class="btn border border-secondary">- Odobrať možnú odpoveď</button>
         </div>
@@ -114,6 +132,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="detail">
                 <label for="question_open">Popis otázky:</label>
                 <input type="text" id="question_open" name="question_open">
+            </div>
+            <div class="detail">
+                <label for="question_open-subject">Predmet:</label>
+                <input type="text" id="question_open-subject" name="question_open-subject">
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" value="0" id="active-checkbox2" name="active-checkbox2" checked>
+                <label class="form-check-label" for="active-checkbox2">
+                    Aktívna otázka
+                </label>
             </div>
         </div>
 
@@ -180,6 +208,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     errors.push("Popis otázky je povinný.");
                 }
 
+                const questionSubjectInput = document.getElementById('question-subject');
+                if (!questionSubjectInput || !questionSubjectInput.value.trim()) {
+                    errors.push("Predmet otázky je povinný.");
+                }
+
                 const answerInputs = document.querySelectorAll('input[id^="answer"]');
                 for (let i = 0; i < answerInputs.length; i++) {
                     if (!answerInputs[i].value.trim()) {
@@ -190,6 +223,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 const questionOpenInput = document.getElementById('question_open');
                 if (!questionOpenInput || !questionOpenInput.value.trim()) {
                     errors.push("Popis otázky je povinný.");
+                }
+                const questionSubjectInput = document.getElementById('question_open-subject');
+                if (!questionSubjectInput || !questionSubjectInput.value.trim()) {
+                    errors.push("Predmet otázky je povinný.");
                 }
             }
 

@@ -18,11 +18,88 @@ require_once("../../../configFinal.php");
 <body>
     <?php include "menu.php"; ?>
 
-    <div class="container border p-1 mt-4 shadow">
+    <div class="container border p-1 mt-4 shadow mb-4 bg-dark-custom">
         <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) : ?>
-            <h2>Prihlásený ako: <?= $_SESSION['login'] ?></h2>
-            <h2>Rola: <?= ($_SESSION['role'] === 'A' ? 'Admin' : 'User') ?></h2>
-            <a href="createQuestion.php" class="btn btn-primary">Vytvoriť otázku</a>
+            <h2>Prihlásený ako: <?= $_SESSION['login'] ?> <span class="text-muted">(<?= ($_SESSION['role'] === 'A' ? 'admin' : 'user') ?>)</span></h2>
+
+            <div class="d-flex justify-content-between mt-4 filter-options">
+                
+                <div class="dropdown d-flex mb-2 ms-2">
+                    <div class="input-group-text bg-dark-subtle">Predmet:</div>
+                    <select class="form-select" aria-label="select1">
+                        <option value="1">Tu budu options na filtrovanie na zaklade predmetov</option>
+                    </select>
+                </div>
+                
+                <div class="dropdown d-flex mb-2">
+                    <div class="input-group-text bg-dark-subtle">Dátum vytvorenia:</div>
+                    <select class="form-select" aria-label="select2">
+                        <option value="1">Tu budu options na filtrovanie na zaklade datumu vytvorenia</option>
+                    </select>
+                </div>
+
+                <a href="createQuestion.php" class="btn btn-primary mb-2 me-2">Vytvoriť otázku</a>
+            </div>
+
+            <?php
+                $sql = "SELECT * FROM questions WHERE user_fk = ?";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "i", $_SESSION['id']);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+
+                if (mysqli_num_rows($result) > 0) {
+                    $questionNumber = 1;
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<div class='border border-light shadow p-4 m-2 bg-white bg-gradient'>";
+                            echo "<h3>Otázka č. " . $questionNumber;
+                            if ($row['type'] === 'list') {
+                                echo "<span class='fs-5 text-muted'>  (otázka s výberom správnej odpovede)</span>";
+                            } else {
+                                echo "<span class='fs-5 text-muted'>  (otázka s voľnou odpoveďou)</span>";
+                            }
+                            echo "</h3>";
+
+                            echo "<hr>";
+                            echo "<p class='fs-5 mb-2'>" . $row['description'] . "</p>";
+
+                            $sql_answers = "SELECT * FROM answers WHERE question_fk = ?";
+                            $stmt_answers = mysqli_prepare($conn, $sql_answers);
+                            mysqli_stmt_bind_param($stmt_answers, "i", $row['id']);
+                            mysqli_stmt_execute($stmt_answers);
+                            $result_answers = mysqli_stmt_get_result($stmt_answers);
+
+                            if (mysqli_num_rows($result_answers) > 0) {
+                                echo "<ul>";
+                                while ($row_answers = mysqli_fetch_assoc($result_answers)) {
+                                    echo "<li>" . $row_answers['description'] . "</li>";
+                                }
+                                echo "</ul>";
+                            }
+                            echo "<hr>";
+
+                            echo "<p class='fs-6 mb-1'>Predmet: " . $row['subject'] . "</p>";
+                            echo "<p class='fs-6 mb-1'>Dátum vytvorenia: " . $row['date_created'] . "</p>";
+                            echo "<p class='fs-6'>Aktívna: " . ($row['active'] ? 'áno' : 'nie') . "</p>";
+                            echo "<div class='d-flex question-buttons'>";
+                                echo "<button class='btn btn-outline-secondary h6 me-1'>UPRAVIŤ</button>";
+                                echo "<button class='btn btn-outline-secondary h6 me-1'>KOPÍROVAŤ</button>";
+                                echo "<button class='btn btn-outline-secondary h6 me-1'>ZMAZAŤ</button>";
+                                echo "<button class='btn btn-outline-secondary h6 me-1'>VÝSLEDKY HLASOVANIA</button>";
+                                echo "<button class='btn btn-outline-secondary h6'>UZATVORIŤ HLASOVANIE</button>";
+                            echo "</div>";
+
+                        echo "</div>";
+                        $questionNumber++;
+                    }
+                } else {
+                    echo "<h3 class='text-center mt-3 mb-4'>Zatiaľ ste nevytvorili žiadne otázky.</h3>";
+                }
+
+                mysqli_stmt_close($stmt);
+                mysqli_close($conn);
+            ?>
+
         <?php else : ?>
             <h2>Neprihlásený používateľ</h2>
         <?php endif; ?>

@@ -22,6 +22,7 @@ require_once("../../../configFinal.php");
         <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) : ?>
             <h2>Prihlásený ako: <?= $_SESSION['login'] ?></h2>
             <h2>Rola: <?= ($_SESSION['role'] === 'A' ? 'Admin' : 'User') ?></h2>
+            <a href="createQuestion.php" class="btn btn-primary">Vytvoriť otázku</a>
         <?php else : ?>
             <h2>Neprihlásený používateľ</h2>
         <?php endif; ?>

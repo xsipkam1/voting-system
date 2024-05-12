@@ -115,8 +115,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form id="question-form" method="post" class="mt-4">
 
         <div class="radio-buttons">
-            <label><input type="radio" name="question-type" value="list" checked><?php echo translate('Otázka s výberom odpovede'); ?></label>
-            <label><input type="radio" name="question-type" value="text"><?php echo translate('Otázka s otvorenou odpoveďou'); ?></label>
+            <label><input type="radio" name="question-type" value="list" checked> <?php echo translate('Otázka s výberom odpovede'); ?></label>
+            <label><input type="radio" name="question-type" value="text"> <?php echo translate('Otázka s otvorenou odpoveďou'); ?></label>
         </div>
 
         <hr>

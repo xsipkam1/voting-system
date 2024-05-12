@@ -45,7 +45,7 @@ function getUsername($userId, $conn) {
                 <div class="dropdown d-flex mb-2 ms-2">
                     <div class="input-group-text bg-dark-subtle"><?php echo translate('Predmet'); ?>:</div>
                     <select class="form-select" id="subjectFilter" aria-label="select1">
-                        <option value="">Všetky</option>
+                        <option value=""><?php echo translate('Všetky'); ?></option>
                         <?php
                             if ($_SESSION['role'] === 'A') {
                                 $sqlSubjects = "SELECT DISTINCT subject FROM questions";
@@ -71,7 +71,7 @@ function getUsername($userId, $conn) {
                 <div class="dropdown d-flex mb-2">
                     <div class="input-group-text bg-dark-subtle"><?php echo translate('Dátum vytvorenia'); ?>:</div>
                     <select class="form-select" id="dateFilter" aria-label="select2">
-                        <option value="">Všetky</option>
+                        <option value=""><?php echo translate('Všetky'); ?></option>
                         <?php
                             if ($_SESSION['role'] === 'A') {
                                 $sqlSubjects = "SELECT DISTINCT DATE(date_created) AS creation_date FROM questions";
@@ -98,9 +98,9 @@ function getUsername($userId, $conn) {
                 <?php
                     if ($_SESSION['role'] === 'A') {
                         echo '<div class="dropdown d-flex mb-2">';
-                        echo '<div class="input-group-text bg-dark-subtle">Používateľ:</div>';
+                        echo "<div class='input-group-text bg-dark-subtle'>" . translate('Používateľ') . ": </div>";
                         echo '<select class="form-select" id="userFilter" aria-label="select3">';
-                        echo '<option value="">Všetci</option>';
+                        echo "<option value=''>" . translate('Všetci') . "</option>";
 
                         $sqlUsers = "SELECT DISTINCT user_fk FROM questions WHERE user_fk != ?";
                         $stmtUsers = $conn->prepare($sqlUsers);
@@ -196,17 +196,17 @@ function getUsername($userId, $conn) {
                         while ($row = mysqli_fetch_assoc($result)) {
                             echo "<div class='border border-light shadow p-4 m-2 bg-white bg-gradient'>";
     
-                        echo "<h3>" . translate('Otázka č.') . $questionNumber;
+                            echo "<h3>" . translate('Otázka č.') . " " . $questionNumber;
 
                                 if ($row['type'] === 'list') {
-                                    echo "<span class='fs-5 text-muted'>(" . translate('otázka s výberom správnej odpovede') . ")</span>";
+                                    echo "<span class='fs-5 text-muted'> (" . translate('otázka s výberom správnej odpovede') . ")</span>";
                                 } else {
-                                    echo "<span class='fs-5 text-muted'>(" . translate('otázka s voľnou odpoveďou') . ")</span>";
+                                    echo "<span class='fs-5 text-muted'> (" . translate('otázka s voľnou odpoveďou') . ")</span>";
                                 }
                                 echo "</h3>";
 
                                 if ($_SESSION['role'] === 'A' && $row['user_fk'] !== $_SESSION['id']) {
-                                    echo "<p class='fs-5 text-muted user' data-user-id='" . $row['user_fk'] . "'>- od používateľa " . getUsername($row['user_fk'], $conn) . "</p>";
+                                    echo "<p class='fs-5 text-muted user' data-user-id='" . $row['user_fk'] . "'>- " . translate('od používateľa') . " " . getUsername($row['user_fk'], $conn) . "</p>";
                                 }
 
                                 echo "<hr>";
@@ -228,7 +228,7 @@ function getUsername($userId, $conn) {
                                 echo "<hr>";
 
                                 $collapseId = "collapse" . $row['id'];
-                                echo "<button class='btn btn-secondary mb-2' type='button' data-bs-toggle='collapse' data-bs-target='#$collapseId' aria-expanded='false' aria-controls='$collapseId'><i class='bi bi-chevron-down'></i> ROZBALIŤ</button>";
+                                echo "<button class='btn btn-secondary mb-2' type='button' data-bs-toggle='collapse' data-bs-target='#$collapseId' aria-expanded='false' aria-controls='$collapseId'><i class='bi bi-chevron-down'></i> " . translate('ROZBALIŤ') . "</button>";
 
                                 echo "<div class='collapse' id='$collapseId'>";
                                     echo "<p class='fs-6 mb-1'>" . translate('Predmet') . ": " . $row['subject'] . "</p>";

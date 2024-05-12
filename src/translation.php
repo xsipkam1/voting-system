@@ -10,11 +10,11 @@ $translations = array(
     "Registrovať" => "Sign up",
     "Jazyk" => "Language",
     "Hlasovací systém" => "Voting system",
-    "Prihlásený ako" => "Login as",
+    "Prihlásený ako" => "Logged in as",
     "Predmet" => "Subject",
     "Dátum vytvorenia" => "Date created",
     "Vytvoriť otázku" => "Create question",
-    "Otázka č." => "Question n.",
+    "Otázka č." => "Question no.",
     "otázka s výberom správnej odpovede" => "question with correct answer selection",
     "otázka s voľnou odpoveďou" => "question with open answer",
     "Aktívna" => "Active",
@@ -79,7 +79,13 @@ $translations = array(
     "Nový login" => "New login",
     "Úspešne ste odstránili otázku" => "Question successfully deleted",
     "Pri odstráňovaní otázky nastala chyba." => "An error occurred while deleting the question.",
-
+    "Všetky" => "All",
+    "Všetci" => "Everyone",
+    "Používateľ" => "User",
+    "od používateľa" => "from user",
+    "ROZBALIŤ" => "UNPACK",
+    "VYTVORIŤ POUŽÍVATEĽA" => "CREATE USER",
+    "VYTVORIŤ" => "CREATE",
 );
 
 function translate($word) {

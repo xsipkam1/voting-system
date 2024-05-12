@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
 
     if ($logins_existing != 0){
-        $errors[] = "Tykýto Login už existuje";
+        $errors[] = "Takýto Login už existuje";
     }
 
     if (!empty($newPassword)){

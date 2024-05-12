@@ -28,8 +28,9 @@ $code = substr($key, -5);
 <body>
 
 <div class='border border-light shadow p-4 m-2 bg-white bg-gradient'>
-    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" class="">
-        <?php
+    <form action="../questionAnswer.php" method="post" class="" autocomplete="off">
+
+    <?php
         if (!preg_match('/^[a-zA-Z\/]+$/', $code)) {
             // Invalid $key format
             echo "Invalid key format!";
@@ -75,6 +76,7 @@ $code = substr($key, -5);
                 echo "<label for='freeAnswer' class='form-label'>Tvoja odpoveď</label>";
                 echo "<input type='text' class='form-control' id='freeAnswer' name='freeAnswer'>";
                 echo "</div>";
+                echo "<input type='hidden' name='questionId' value='{$row['id']}'>";
             }
             echo "</h3>";
             echo "<hr>";

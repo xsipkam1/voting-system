@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once 'translation.php';
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("location: index.php");
     exit;
@@ -15,17 +16,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $repeat_password = $_POST['repeat_password'];
 
     if (empty($login)) {
-        $errors[] = "Login je povinný.";
+        $errors[] = translate("Login je povinný.");
     } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $login)) {
-        $errors[] = "Login môže obsahovať iba písmená, číslice a podčiarkovníky.";
+        $errors[] = translate("Login môže obsahovať iba písmená, číslice a podčiarkovníky.");
     }
     if (empty($password)) {
-        $errors[] = "Heslo je povinné.";
+        $errors[] = translate("Heslo je povinné.");
     } elseif (strlen($password) < 6) {
-        $errors[] = "Heslo musí mať aspoň 6 znakov.";
+        $errors[] = translate("Heslo musí mať aspoň 6 znakov.");
     }
     if ($password !== $repeat_password) {
-        $errors[] = "Heslo a opakovanie hesla sa nezhodujú.";
+        $errors[] = translate("Heslo a opakovanie hesla sa nezhodujú.");
     }
 
     $sql = "SELECT id FROM users WHERE login = ?";
@@ -34,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
     if (mysqli_stmt_num_rows($stmt) > 0) {
-        $errors[] = "Používateľ s týmto loginom už existuje.";
+        $errors[] = translate("Používateľ s týmto loginom už existuje.");
     }
     mysqli_stmt_close($stmt);
     if (empty($errors)) {
@@ -65,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <?php include "menu.php"; ?>
 <div class="out-cont">
-    <h2>REGISTRÁCIA</h2>
+    <h2><?php echo mb_strtoupper(translate('Registrácia'), 'UTF-8'); ?></h2>
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
 
         <div class="detail">
@@ -73,15 +74,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="login" name="login">
         </div>
         <div class="detail">
-            <label for="password">Heslo:</label>
+        <label for="password"><?php echo translate("Heslo"); ?>:</label>
+
             <input type="password" id="password" name="password">
         </div>
         <div class="detail">
-            <label for="repeat_password">Zopakovať heslo:</label>
+        <label for="repeat_password"><?php echo translate("Zopakovať heslo"); ?>:</label>
             <input type="password" id="repeat_password" name="repeat_password">
         </div>
         <div class="buttons">
-            <input type="submit" value="Registrovať">
+            <input type="submit" value="<?php echo translate('Registrovať'); ?>">
         </div>
         <?php
         if (!empty($errors)) {
@@ -96,12 +98,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h3 class="modal-title w-100" id="registrationSuccessModalLabel">REGISTRÁCIA ÚSPEŠNÁ</h3>
+            <h3 class="modal-title w-100" id="registrationSuccessModalLabel"><?php echo translate('REGISTRÁCIA ÚSPEŠNÁ'); ?></h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                Váš účet bol úspešne vytvorený. Teraz sa môžete prihlásiť pod loginom, ktorý ste si zvolili.
+                <?php echo translate("Váš účet bol úspešne vytvorený. Teraz sa môžete prihlásiť pod loginom, ktorý ste si zvolili."); ?>
             </div>
+
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
             </div>

@@ -3,6 +3,7 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+include_once 'translation.php';
 if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && ($_SESSION['role'] === 'A' || $_SESSION['role'] === 'U'))) {
     header("Location: index.php");
     exit;
@@ -14,7 +15,7 @@ $errors = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($_POST['question-type'] === 'list') {
         if (empty($_POST['question'])) {
-            $errors[] = "Popis otázky je povinný.";
+            $errors[] = translate("Popis otázky je povinný.");
         }
         $answerFields = array_filter($_POST, function($key) {
             return strpos($key, 'answer') !== false;
@@ -22,12 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         foreach ($answerFields as $key => $value) {
             if (empty($value)) {
-                $errors[] = "Možná odpoveď " . substr($key, 6) . " je povinná.";
+                $errors[] = translate("Možná odpoveď ") . substr($key, 6) . translate(" je povinná.");
             }
         }
     } elseif ($_POST['question-type'] === 'text') {
         if (empty($_POST['question_open'])) {
-            $errors[] = "Popis otázky je povinný.";
+            $errors[] = translate("Popis otázky je povinný.");
         }
     }
 
@@ -88,32 +89,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <?php include "menu.php"; ?>
 <div class="out-cont">
-    <h2>VYTVORENIE NOVEJ OTÁZKY</h2>
+    <h2><?php echo mb_strtoupper(translate('Vytvorenie novej otázky'), 'UTF-8'); ?></h2>
     <form id="question-form" method="post" class="mt-4">
 
         <div class="radio-buttons">
-            <label><input type="radio" name="question-type" value="list" checked> Otázka s výberom odpovede</label>
-            <label><input type="radio" name="question-type" value="text"> Otázka s otvorenou odpoveďou</label>
+            <label><input type="radio" name="question-type" value="list" checked><?php echo translate('Otázka s výberom odpovede'); ?></label>
+            <label><input type="radio" name="question-type" value="text"><?php echo translate('Otázka s otvorenou odpoveďou'); ?></label>
         </div>
 
         <hr>
 
         <div class="list-question" style="display:none;">
             <div class="detail">
-                <label for="question">Popis otázky:</label>
+                <label for="question"><?php echo translate('Popis otázky'); ?>:</label>
                 <input type="text" id="question" name="question">
             </div>
             <div class="detail">
-                <label for="question-subject">Predmet:</label>
+                <label for="question-subject"><?php echo translate('Predmet'); ?>:</label>
                 <input type="text" id="question-subject" name="question-subject">
             </div>
             <div id="answers-container">
                 <div class="detail">
-                    <label for="answer1">Možná odpoveď 1:</label>
+                    <label for="answer1"><?php echo translate('Možná odpoveď'); ?> 1:</label>
                     <input type="text" id="answer1" name="answer1">
                 </div>
                 <div class="detail">
-                    <label for="answer2">Možná odpoveď 2:</label>
+                    <label for="answer2"><?php echo translate('Možná odpoveď'); ?> 2:</label>
                     <input type="text" id="answer2" name="answer2">
                 </div>
 
@@ -121,32 +122,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-check mb-4">
                     <input class="form-check-input" type="checkbox" value="0" id="active-checkbox" name="active-checkbox" checked>
                     <label class="form-check-label" for="active-checkbox">
-                        Aktívna otázka
+                        <?php echo translate('Aktívna otázka'); ?>
                     </label>
                 </div>
-            <button type="button" id="add-answer" class="btn border border-secondary">+ Pridať možnú odpoveď</button>
-            <button type="button" id="minus-answer" style="display: none;" class="btn border border-secondary">- Odobrať možnú odpoveď</button>
+                <button type="button" id="add-answer" class="btn border border-secondary">+ <?php echo translate('Pridať možnú odpoveď'); ?></button>
+                <button type="button" id="minus-answer" style="display: none;" class="btn border border-secondary">- <?php echo translate('Odobrať možnú odpoveď'); ?></button>
         </div>
 
         <div class="text-question" style="display:none;">
             <div class="detail">
-                <label for="question_open">Popis otázky:</label>
+                <label for="question_open"><?php echo translate('Popis otázky'); ?>:</label>
                 <input type="text" id="question_open" name="question_open">
             </div>
             <div class="detail">
-                <label for="question_open-subject">Predmet:</label>
+                <label for="question_open-subject"><?php echo translate('Predmet'); ?>:</label>
                 <input type="text" id="question_open-subject" name="question_open-subject">
             </div>
             <div class="form-check mb-4">
                 <input class="form-check-input" type="checkbox" value="0" id="active-checkbox2" name="active-checkbox2" checked>
                 <label class="form-check-label" for="active-checkbox2">
-                    Aktívna otázka
+                    <?php echo translate('Aktívna otázka'); ?>
                 </label>
             </div>
         </div>
 
         <div class="buttons">
-            <input type="submit" value="Vytvoriť">
+        <input type="submit" value="<?php echo translate('Vytvoriť otázku'); ?>">
+
         </div>
         <?php
         if (!empty($errors)) {
@@ -161,11 +163,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header text-center">
-                <h3 class="modal-title w-100" id="questionCreatedSuccessModalLabel">OTÁZKA ÚSPEŠNE VYTVORENÁ</h3>
+                <h3 class="modal-title w-100" id="questionCreatedSuccessModalLabel"><?php echo translate('OTÁZKA ÚSPEŠNE VYTVORENÁ'); ?></h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                Úspešne ste vytvorili novú otázku.
+                <?php echo translate('Úspešne ste vytvorili novú otázku.'); ?>
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
@@ -175,6 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <script>
+    var currentLanguage = "sk"
     document.addEventListener('DOMContentLoaded', function() {
         <?php if (isset($_SESSION['questionCreatedSuccess']) && $_SESSION['questionCreatedSuccess'] === true) : ?>
             var registrationSuccessModal = new bootstrap.Modal(document.getElementById('questionCreatedSuccessModal'));
@@ -198,6 +201,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
 
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    currentLanguage = xhr.responseText;
+                    console.log(currentLanguage);
+                } else {
+                    console.error('Chyba pri získavaní aktuálneho jazyka');
+                }
+            }
+        };
+        xhr.open('GET', 'get_current_language.php', true); // Zmena na správnu cestu k vášmu skriptu
+        xhr.send();
+
         function validateForm() {
             const questionType = document.querySelector('input[name="question-type"]:checked').value;
             const errors = [];
@@ -205,28 +222,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (questionType === 'list') {
                 const questionInput = document.getElementById('question');
                 if (!questionInput || !questionInput.value.trim()) {
-                    errors.push("Popis otázky je povinný.");
+                    if (currentLanguage === "en") {
+                        errors.push("Question description is required");
+                    } else {
+                        errors.push("Popis otázky je povinný.");
+                    }
                 }
 
                 const questionSubjectInput = document.getElementById('question-subject');
                 if (!questionSubjectInput || !questionSubjectInput.value.trim()) {
-                    errors.push("Predmet otázky je povinný.");
+                    if (currentLanguage === "en") {
+                        errors.push("Subject of answer is required.");
+                    } else {
+                        errors.push("Predmet otázky je povinný.");
+                    }
                 }
 
                 const answerInputs = document.querySelectorAll('input[id^="answer"]');
                 for (let i = 0; i < answerInputs.length; i++) {
                     if (!answerInputs[i].value.trim()) {
-                        errors.push(`Možná odpoveď ${i + 1} je povinná.`);
+                        if (currentLanguage === "en") {
+                            errors.push(`Possible answer ${i + 1} is required.`);
+                        } else {
+                            errors.push(`Možná odpoveď ${i + 1} je povinná.`);
+                        }
+                        
                     }
                 }
             } else if (questionType === 'text') {
                 const questionOpenInput = document.getElementById('question_open');
                 if (!questionOpenInput || !questionOpenInput.value.trim()) {
-                    errors.push("Popis otázky je povinný.");
+                    if (currentLanguage === "en") {
+                        errors.push("Question description is required");
+                    } else {
+                        errors.push("Popis otázky je povinný.");
+                    }
                 }
                 const questionSubjectInput = document.getElementById('question_open-subject');
                 if (!questionSubjectInput || !questionSubjectInput.value.trim()) {
-                    errors.push("Predmet otázky je povinný.");
+                    if (currentLanguage === "en") {
+                        errors.push("Subject of answer is required.");
+                    } else {
+                        errors.push("Predmet otázky je povinný.");
+                    }
                 }
             }
 
@@ -276,7 +314,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             newDetailDiv.classList.add('detail');
             const newLabel = document.createElement('label');
             newLabel.setAttribute('for', 'answer' + answerCount);
-            newLabel.textContent = 'Možná odpoveď ' + answerCount + ':';
+            if (currentLanguage === "en") {
+                newLabel.textContent = 'Possible answer ' + answerCount + ':';
+            } else {
+                newLabel.textContent = 'Možná odpoveď ' + answerCount + ':';
+            }
             const newInput = document.createElement('input');
             newInput.setAttribute('type', 'text');
             newInput.setAttribute('id', 'answer' + answerCount);

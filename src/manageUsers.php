@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../../../configFinal.php");
+include_once 'translation.php';
 
 if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && $_SESSION['role'] === 'A')) {
     header("Location: index.php");
@@ -25,13 +26,13 @@ $result = $conn->query($sql);
     <?php include "menu.php"; ?>
 
     <div class="container border p-1 mt-4 shadow">
-        <h1 class="mb-4">SPRÁVA POUŽÍVATEĽOV</h1>
+        <h1 class="mb-4"><?php echo translate('SPRÁVA POUŽÍVATEĽOV'); ?></h1>
         <table class="table border shadow table-striped text-center">
             <thead>
                 <tr class="first-row">
                     <th scope="col">ID</th>
                     <th scope="col">LOGIN</th>
-                    <th scope="col">AKCIA</th>
+                    <th scope="col"><?php echo translate("AKCIA"); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -42,13 +43,13 @@ $result = $conn->query($sql);
                         echo "<td class='col-lg-2'>" . $row["id"] . "</td>";
                         echo "<td class='col-lg-6'>" . $row["login"] . "</td>";
                         echo "<td class='col-lg-4'>";
-                        echo "<button type='button' class='btn btn-outline-primary btn-sm edit-button' data-bs-toggle='modal' data-bs-target='#editUserModal' data-user-id='" . $row["id"] . "' data-user-login='" . $row["login"] . "'>UPRAVIŤ</button>";
-                        echo "<a href='#' class='btn btn-outline-danger btn-sm ms-1 delete-button' data-user-id='" . $row["id"] . "'>ZMAZAŤ</a>";
+                        echo "<button type='button' class='btn btn-outline-primary btn-sm edit-button' data-bs-toggle='modal' data-bs-target='#editUserModal' data-user-id='" . $row["id"] . "' data-user-login='" . $row["login"] . "'>" . translate("UPRAVIŤ") . "</button>";
+                        echo "<a href='#' class='btn btn-outline-danger btn-sm ms-1 delete-button' data-user-id='" . $row["id"] . "'>" . translate("ZMAZAŤ") . "</a>";
                         echo "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='3'>Momentálne žiadní používatelia</td></tr>";
+                    echo "<tr><td colspan='3'>" . translate("Momentálne žiadní používatelia") . "</td></tr>";
                 }
                 ?>
             </tbody>
@@ -59,17 +60,17 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h3 class="modal-title w-100" id="confirmDeleteModalLabel">POTVRĎTE VYMAZANIE</h3>
+                <h3 class="modal-title w-100" id="confirmDeleteModalLabel"><?php echo translate("POTVRĎTE VYMAZANIE"); ?></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    Naozaj chcete vymazať tohto používateľa?
+                    <?php echo translate("Naozaj chcete vymazať tohto používateľa?"); ?>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <form action="deleteUser.php" method="post" class="p-0 m-0">
                         <input type="hidden" name="userId" id="deleteUserId">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZRUŠIŤ</button>
-                        <button type="submit" class="btn btn-outline-danger">ZMAZAŤ</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate("ZRUŠIŤ"); ?></button>
+                        <button type="submit" class="btn btn-outline-danger"><?php echo translate("ZMAZAŤ"); ?></button>
                     </form>
                 </div>
             </div>
@@ -80,15 +81,15 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-header">
-                    <h3 class="modal-title w-100" id="deletionSuccessModalLabel">ÚSPEŠNE VYMAZANÉ</h3>
+                    <h3 class="modal-title w-100" id="deletionSuccessModalLabel"><?php echo translate("ÚSPEŠNE VYMAZANÉ"); ?></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
                     <?php
                     if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']) {
-                        echo "Uspešne ste odstránili používateľa.";
+                        echo translate("Uspešne ste odstránili používateľa.");
                     } else {
-                        echo "Pri odstráňovaní používateľa nastala chyba.";
+                        echo translate("Pri odstráňovaní používateľa nastala chyba.");
                     }
                     ?>
                 </div>
@@ -103,15 +104,15 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-header">
-                    <h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel">ÚSPEŠNE ZMENENÉ</h3>
+                    <h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel"><?php echo translate("ÚSPEŠNE ZMENENÉ"); ?></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
                     <?php
                     if (isset($_SESSION['roleUpdateSuccess']) && $_SESSION['roleUpdateSuccess']) {
-                        echo "Uspešne ste zmenili používateľa.";
+                        echo translate("Uspešne ste zmenili používateľa."); 
                     } else {
-                        echo "Pri menení informácií o používateľovi nastala chyba.";
+                        echo translate("Pri menení informácií o používateľovi nastala chyba.");
                     }
                     ?>
                 </div>
@@ -126,26 +127,26 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h3 class="modal-title w-100" id="editUserModalLabel">UPRAVIŤ POUŽÍVATEĽA</h3>
+                    <h3 class="modal-title w-100" id="editUserModalLabel"><?php echo translate("UPRAVIŤ POUŽÍVATEĽA"); ?></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="editUser.php" method="post" class="p-0 m-0 shadow-none">
                         <input type="hidden" id="editUserId" name="userId">
                         <div class="mb-3">
-                            <label for="editUserPassword" class="form-label">Heslo</label>
-                            <input type="password" class="form-control" id="editUserPassword" name="userPassword" placeholder="Nové heslo">
+                            <label for="editUserPassword" class="form-label"><?php echo translate("HESLO"); ?></label>
+                            <input type="password" class="form-control" id="editUserPassword" name="userPassword" placeholder="<?php echo translate("Nové heslo"); ?>">
                         </div>
                         <div class="mb-3 b-0">
-                            <label for="editUserRole" class="form-label">ROLA</label>
+                            <label for="editUserRole" class="form-label"><?php echo translate("ROLA"); ?></label>
                             <select class="form-select" id="editUserRole" name="userRole">
                                 <option value="U">U</option>
                                 <option value="A">A</option>
                             </select>
                         </div>
                         <div class="text-center">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZATVORIŤ</button>
-                            <button type="submit" class="btn btn-outline-primary">ULOŽIŤ</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate("ZATVORIŤ"); ?></button>
+                            <button type="submit" class="btn btn-outline-primary"><?php echo translate("ULOŽIŤ"); ?></button>
                         </div>
                     </form>
                 </div>

@@ -27,6 +27,7 @@ $result = $conn->query($sql);
 
     <div class="container p-1 mt-4">
         <h2 class="mb-4">SPRÁVA POUŽÍVATEĽOV</h2>
+        <button type="button" id="add-user" class="btn border border-secondary">+ Pridať používateľa</button>
         <table class="table border shadow table-striped text-center">
             <thead>
                 <tr class="first-row">
@@ -56,6 +57,78 @@ $result = $conn->query($sql);
         </table>
     </div>
 
+    <div class="modal fade" id="userCreationModal" tabindex="-1" aria-labelledby="userCreationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h3 class="modal-title w-100" id="userCreationModalLabel">VYTVORIŤ POUŽÍVATEĽA</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="createUser.php" method="post" class="p-0 m-0 shadow-none">
+                        <div class="mb-3">
+                            <label for="createUserLogin" class="form-label">Login</label>
+                            <input type="text" class="form-control" id="createUserLogin" name="userLogin" placeholder="Login">
+                        </div>
+                        <div class="mb-3">
+                            <label for="createUserPassword" class="form-label">Heslo</label>
+                            <input type="password" class="form-control" id="createUserPassword" name="userPassword" placeholder="Heslo">
+                        </div>
+                        <div class="mb-3 b-0">
+                            <label for="createUserRole" class="form-label">ROLA</label>
+                            <select class="form-select" id="createUserRole" name="userRole">
+                                <option value="U">U</option>
+                                <option value="A">A</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZATVORIŤ</button>
+                            <button type="submit" class="btn btn-outline-primary">VYTVORIŤ</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="creationSuccessModal" tabindex="-1" aria-labelledby="creationSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <?php
+                    if (isset($_SESSION['userCreationSuccess']) && $_SESSION['userCreationSuccess']) {
+                        echo '<h3 class="modal-title w-100" id="creationSuccessModalLabel">ÚSPEŠNE VYTVORENÝ POUŽÍVATEĽ</h3>';
+                    } else {
+                        echo '<h3 class="modal-title w-100" id="creationSuccessModalLabel">POUŽÍVATEĽ NEBOL VYTVORENÝ</h3>';
+                    }
+                    ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <?php
+                    if (isset($_SESSION['userCreationSuccess']) && $_SESSION['userCreationSuccess']) {
+                        echo "Úspešne ste vytvorili používateľa.";
+                    } else {
+                        if (isset($_SESSION['userCreationErrors'])) {
+                            foreach ($_SESSION['userCreationErrors'] as $error) {
+                                echo "<p>$error</p>";
+                            }
+
+                            unset($_SESSION['userCreationErrors']);
+                        }
+                        else{
+                            echo "Pri vytváraní používateľa nastala chyba.";
+                        }
+                    }
+                    ?>
+                </div>
+                <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -81,13 +154,19 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-header">
-                    <h3 class="modal-title w-100" id="deletionSuccessModalLabel">ÚSPEŠNE VYMAZANÉ</h3>
+                    <?php
+                    if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']) {
+                        echo '<h3 class="modal-title w-100" id="deletionSuccessModalLabel">ÚSPEŠNE VYMAZANÉ</h3>';
+                    } else {
+                        echo '<h3 class="modal-title w-100" id="deletionSuccessModalLabel">VYMAZANIE NEBOLO ÚSPEŠNÉ</h3>';
+                    }
+                    ?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
                     <?php
                     if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']) {
-                        echo "Uspešne ste odstránili používateľa.";
+                        echo "Úspešne ste odstránili používateľa.";
                     } else {
                         echo "Pri odstráňovaní používateľa nastala chyba.";
                     }
@@ -104,15 +183,30 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-header">
-                    <h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel">ÚSPEŠNE ZMENENÉ</h3>
+                    <?php
+                    if (isset($_SESSION['roleUpdateSuccess']) && $_SESSION['roleUpdateSuccess']) {
+                        echo '<h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel">ÚSPEŠNE ZMENENÉ</h3>';
+                    } else {
+                        echo '<h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel">ZMENA NEBOLA ÚSPEŠNÁ</h3>';
+                    }
+                    ?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
                     <?php
                     if (isset($_SESSION['roleUpdateSuccess']) && $_SESSION['roleUpdateSuccess']) {
-                        echo "Uspešne ste zmenili používateľa.";
+                        echo "Úspešne ste zmenili používateľa.";
                     } else {
-                        echo "Pri menení informácií o používateľovi nastala chyba.";
+                        if (isset($_SESSION['roleUpdateErrors'])) {
+                            foreach ($_SESSION['roleUpdateErrors'] as $error) {
+                                echo "<p>$error</p>";
+                            }
+
+                            unset($_SESSION['roleUpdateErrors']);
+                        }
+                        else{
+                            echo "Pri menení informácií o používateľovi nastala chyba.";
+                        }
                     }
                     ?>
                 </div>
@@ -133,6 +227,10 @@ $result = $conn->query($sql);
                 <div class="modal-body">
                     <form action="editUser.php" method="post" class="p-0 m-0 shadow-none">
                         <input type="hidden" id="editUserId" name="userId">
+                        <div class="mb-3">
+                            <label for="editUserLogin" class="form-label">Login</label>
+                            <input type="text" class="form-control" id="editUserLogin" name="userLogin" placeholder="Nový login">
+                        </div>
                         <div class="mb-3">
                             <label for="editUserPassword" class="form-label">Heslo</label>
                             <input type="password" class="form-control" id="editUserPassword" name="userPassword" placeholder="Nové heslo">
@@ -173,8 +271,14 @@ $result = $conn->query($sql);
                     const userId = this.getAttribute('data-user-id');
                     const userLogin = this.getAttribute('data-user-login');
                     document.getElementById('editUserId').value = userId;
+                    document.getElementById('editUserLogin').value = userLogin;
                     document.getElementById('editUserPassword').value = '';
                 });
+            });
+
+            document.getElementById('add-user').addEventListener('click', function(){
+                const userCreationModal = new bootstrap.Modal(document.getElementById('userCreationModal'));
+                userCreationModal.show();
             });
         });
 
@@ -188,6 +292,12 @@ $result = $conn->query($sql);
             const roleUpdateSuccessModal = new bootstrap.Modal(document.getElementById('roleUpdateSuccessModal'));
             roleUpdateSuccessModal.show();
             <?php unset($_SESSION['roleUpdateSuccess']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['userCreationSuccess'])): ?>
+            const roleUpdateSuccessModal = new bootstrap.Modal(document.getElementById('creationSuccessModal'));
+            roleUpdateSuccessModal.show();
+            <?php unset($_SESSION['userCreationSuccess']); ?>
         <?php endif; ?>
 
     </script>

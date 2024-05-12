@@ -10,6 +10,15 @@ if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && ($_SESSI
 
 require_once("../../../configFinal.php");
 
+function generateRandomCode() {
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $code = '';
+    for ($i = 0; $i < 5; $i++) {
+        $code .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    return $code;
+}
+
 $errors = [];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($_POST['question-type'] === 'list') {
@@ -43,9 +52,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $active = isset($_POST['active-checkbox2']) ? true : false;
         }
 
-        $sql = "INSERT INTO questions (description, type, user_fk, subject, date_created, active) VALUES (?, ?, ?, ?, NOW(), ?)";
+        $code = '';
+        do {
+            $code = generateRandomCode();
+            $check_query = "SELECT COUNT(*) as count FROM questions WHERE code = ?";
+            $check_stmt = mysqli_prepare($conn, $check_query);
+            mysqli_stmt_bind_param($check_stmt, "s", $code);
+            mysqli_stmt_execute($check_stmt);
+            mysqli_stmt_bind_result($check_stmt, $count);
+            mysqli_stmt_fetch($check_stmt);
+            mysqli_stmt_close($check_stmt);
+        } while ($count > 0);
+
+        $sql = "INSERT INTO questions (description, type, user_fk, subject, date_created, active, code) VALUES (?, ?, ?, ?, NOW(), ?,?)";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "ssssi", $description,  $type, $user_fk, $subject, $active);
+        mysqli_stmt_bind_param($stmt, "ssssis", $description,  $type, $user_fk, $subject, $active,$code);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 
@@ -83,9 +104,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Create Question</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg-dark-custom">
 <?php include "menu.php"; ?>
 <div class="out-cont">
     <h2>VYTVORENIE NOVEJ OTÁZKY</h2>

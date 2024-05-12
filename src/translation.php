@@ -34,7 +34,8 @@ $translations = array(
     "ÚSPEŠNE VYMAZANÉ" => "SUCCESSFULLY DELETED",
     "Uspešne ste odstránili používateľa." => "User successfully deleted.",
     "Pri odstráňovaní používateľa nastala chyba." => "An error occurred while deleting the user.",
-    "ÚSPEŠNE ZMENENÉ" => "Successfully updated.",
+    "ÚSPEŠNE ZMENENÉ" => "SECCESSFULLY UPDATED",
+    "ZMENA NEBOLA ÚSPEŠNÁ" => "NOT SECCESSFULLY UPDATED",
     "Pri menení informácií o používateľovi nastala chyba." => "An error occurred while updating user information.",
     "Uspešne ste zmenili používateľa." => "User successfully updated.",
     "UPRAVIŤ POUŽÍVATEĽA" => "EDIT USER",
@@ -72,6 +73,9 @@ $translations = array(
     "Popis otázky je povinný." => "Question description is required.",
     "Predmet otázky je povinný." => "Question subject is required.",
     "Neprihlásený používateľ" => "Unauthenticated user",
+    "Pridať používateľa" => "Add user",
+    "VYMAZANIE NEBOLO ÚSPEŠNÉ" => "DELETION WAS NOT SUCCESSFUL",
+    "Nový login" => "New login",
 
 );
 

@@ -124,6 +124,58 @@ function getUsername($userId, $conn) {
                 <a href="createQuestion.php" class="btn btn-primary mb-2 me-2"><i class="bi bi-plus-square"></i></a>
             </div>
 
+            
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h3 class="modal-title w-100" id="confirmDeleteModalLabel"><?php echo translate('POTVRĎTE VYMAZANIE'); ?></h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <?php echo translate('Naozaj chcete vymazať túto otázku?'); ?>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <form action="deleteQuestion.php" method="post" class="p-0 m-0">
+                                <input type="hidden" name="questionId" id="deleteQuestionId">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate('ZRUŠIŤ'); ?></button>
+                                <button type="submit" class="btn btn-outline-danger"><?php echo translate('ZMAZAŤ'); ?></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="deletionSuccessModal" tabindex="-1" aria-labelledby="deletionSuccessModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <?php
+                            if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']) {
+                                echo '<h3 class="modal-title w-100" id="deletionSuccessModalLabel">'.translate('ÚSPEŠNE VYMAZANÉ').'</h3>';
+                            } else {
+                                echo '<h3 class="modal-title w-100" id="deletionSuccessModalLabel">'.translate('VYMAZANIE NEBOLO ÚSPEŠNÉ').'</h3>';
+                            }
+                            ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <?php
+                            if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']) {
+                                echo translate("Úspešne ste odstránili otázku");
+                            } else {
+                                echo translate("Pri odstráňovaní otázky nastala chyba.");
+                            }
+                            ?>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="questions">
                 <?php
                     if ($_SESSION['role'] === 'A') {
@@ -185,7 +237,7 @@ function getUsername($userId, $conn) {
                                     echo "<div class='d-flex question-buttons '>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-pen'></i> " . translate('UPRAVIŤ') . "</button>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
-                                        echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
+                                        echo "<button class='btn btn-outline-secondary h6 me-1' onclick='deleteQuestion(".$row['id'].")'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
                                         echo "<button class='btn btn-outline-secondary h6'><i class='bi bi-door-closed'></i> " . translate('UZATVORIŤ HLASOVANIE') . "</button>";
                                     echo "</div>";
@@ -239,6 +291,19 @@ function getUsername($userId, $conn) {
         if (userFilter) {
             userFilter.addEventListener('change', filterQuestions);
         }
+
+        function deleteQuestion(questionId){
+            document.getElementById('deleteQuestionId').value = questionId;
+            const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            modal.show();
+        }
+
+        <?php if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']): ?>
+            const deletionSuccessModal = new bootstrap.Modal(document.getElementById('deletionSuccessModal'));
+            deletionSuccessModal.show();
+            <?php unset($_SESSION['deletionSuccess']); ?>
+        <?php endif; ?>
+
 
         filterQuestions();
     </script>

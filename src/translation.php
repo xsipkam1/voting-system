@@ -30,6 +30,7 @@ $translations = array(
     "Momentálne žiadní používatelia" => "Currently no users",
     "POTVRĎTE VYMAZANIE" => "CONFIRM DELETE",
     "Naozaj chcete vymazať tohto používateľa?" => "Do you really want to delete this user?",
+    "Naozaj chcete vymazať túto otázku?" => "Do you really want to delete this question?",
     "ZRUŠIŤ" => "CANCEL",
     "ÚSPEŠNE VYMAZANÉ" => "SUCCESSFULLY DELETED",
     "Uspešne ste odstránili používateľa." => "User successfully deleted.",
@@ -76,6 +77,8 @@ $translations = array(
     "Pridať používateľa" => "Add user",
     "VYMAZANIE NEBOLO ÚSPEŠNÉ" => "DELETION WAS NOT SUCCESSFUL",
     "Nový login" => "New login",
+    "Úspešne ste odstránili otázku" => "Question successfully deleted",
+    "Pri odstráňovaní otázky nastala chyba." => "An error occurred while deleting the question.",
 
 );
 

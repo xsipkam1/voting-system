@@ -12,12 +12,12 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
             <div class="container-fluid">
                 
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link active mx-3" aria-current="page" id="domov-link"><?php echo translate('Domov'); ?></a>
+                    <a href="index.php" class="nav-link active mx-3" aria-current="page" id="domov-link"><i class="bi bi-house"></i><?php echo translate('Domov'); ?></a>
                 </li>
 
                 <li class="nav-item">
                     <span> <?php echo translate('Jazyk'); ?>:</span>
-                    <a <?php echo ($currentLanguage == 'sk') ? 'class="nav-link inactive"' : 'class="nav-link"'; ?> href="?lang=sk"><img src="https://www.geonames.org/flags/x/sk.gif" alt="Slovensky" style="width: 20px; height: auto; br"></a>
+                    <a <?php echo ($currentLanguage == 'sk') ? 'class="nav-link inactive"' : 'class="nav-link"'; ?> href="?lang=sk"><img src="https://www.geonames.org/flags/x/sk.gif" alt="Slovensky" style="width: 20px; height: auto;"></a>
                     <a <?php echo ($currentLanguage == 'en') ? 'class="nav-link inactive"' : 'class="nav-link"'; ?> href="?lang=en"><img src="https://www.geonames.org/flags/x/gb.gif" alt="English" style="width: 20px; height: auto;"></a>
                 </li>
                 <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-label="Expand">
@@ -28,19 +28,19 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
                         <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) : ?>
                             <?php if ($_SESSION['role'] === 'A') : ?>
                                 <li class="nav-item">
-                                    <a href="manageUsers.php" class="nav-link mx-3" id="users-link"><?php echo translate('Používatelia'); ?></a>
+                                    <a href="manageUsers.php" class="nav-link mx-3"> <i class="bi bi-people"></i> <?php echo translate('Používatelia'); ?></a>
                                 </li>
                             <?php endif; ?>
-                                <li class="nav-item">
-                                    <a href="logout.php" class="nav-link mx-3" id="logout-link"><?php echo translate('Odhlásenie'); ?></a>
-                                </li>
-                            <?php else : ?>
-                                <li class="nav-item">
-                                    <a href="login.php" class="nav-link mx-3" id="login-link"><?php echo translate('Prihlásenie'); ?></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="register.php" class="nav-link mx-3" id="register-link"><?php echo translate('Registrácia'); ?></a>
-                                </li>
+                            <li class="nav-item">
+                                <a href="logout.php" class="nav-link mx-3"> <i class="bi bi-box-arrow-right"></i> <?php echo translate('Odhlásenie'); ?></a>
+                            </li>
+                        <?php else : ?>
+                            <li class="nav-item">
+                                <a href="login.php" class="nav-link mx-3"><i class="bi bi-door-open"></i> <?php echo translate('Prihlásenie'); ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="register.php" class="nav-link mx-3"><i class="bi bi-person-plus"></i> <?php echo translate('Registrácia'); ?></a>
+                            </li>
                         <?php endif; ?>
                     </ul>
                 </div>

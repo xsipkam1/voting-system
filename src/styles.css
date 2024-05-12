@@ -134,11 +134,16 @@ form input[type="submit"]:hover {
     }
     .filter-options {
         flex-direction: column !important;
+        padding-left: 10px;
+        padding-right: 10px;
     }
-}
-
-@media (max-width: 767px) {
+    .filter-options a {
+        margin-right: 0 !important;
+    }
     .question-buttons {
         flex-direction: column !important;
+    }
+    .question-buttons button {
+        margin-right: 0 !important;
     }
 }

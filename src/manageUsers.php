@@ -19,14 +19,16 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg-dark-custom">
 
     <?php include "menu.php"; ?>
 
-    <div class="container border p-1 mt-4 shadow">
-        <h1 class="mb-4"><?php echo translate('SPRÁVA POUŽÍVATEĽOV'); ?></h1>
+    <div class="container p-1 mt-4">
+        <h2 class="mb-4"><?php echo translate('SPRÁVA POUŽÍVATEĽOV'); ?></h2>
+        <button type="button" id="add-user" class="btn border border-secondary">+ <?php echo translate('Pridať používateľa'); ?></button>
         <table class="table border shadow table-striped text-center">
             <thead>
                 <tr class="first-row">
@@ -56,6 +58,78 @@ $result = $conn->query($sql);
         </table>
     </div>
 
+    <div class="modal fade" id="userCreationModal" tabindex="-1" aria-labelledby="userCreationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h3 class="modal-title w-100" id="userCreationModalLabel">VYTVORIŤ POUŽÍVATEĽA</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="createUser.php" method="post" class="p-0 m-0 shadow-none">
+                        <div class="mb-3">
+                            <label for="createUserLogin" class="form-label">Login</label>
+                            <input type="text" class="form-control" id="createUserLogin" name="userLogin" placeholder="Login">
+                        </div>
+                        <div class="mb-3">
+                            <label for="createUserPassword" class="form-label">Heslo</label>
+                            <input type="password" class="form-control" id="createUserPassword" name="userPassword" placeholder="Heslo">
+                        </div>
+                        <div class="mb-3 b-0">
+                            <label for="createUserRole" class="form-label">ROLA</label>
+                            <select class="form-select" id="createUserRole" name="userRole">
+                                <option value="U">U</option>
+                                <option value="A">A</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZATVORIŤ</button>
+                            <button type="submit" class="btn btn-outline-primary">VYTVORIŤ</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="creationSuccessModal" tabindex="-1" aria-labelledby="creationSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <?php
+                    if (isset($_SESSION['userCreationSuccess']) && $_SESSION['userCreationSuccess']) {
+                        echo '<h3 class="modal-title w-100" id="creationSuccessModalLabel">ÚSPEŠNE VYTVORENÝ POUŽÍVATEĽ</h3>';
+                    } else {
+                        echo '<h3 class="modal-title w-100" id="creationSuccessModalLabel">POUŽÍVATEĽ NEBOL VYTVORENÝ</h3>';
+                    }
+                    ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <?php
+                    if (isset($_SESSION['userCreationSuccess']) && $_SESSION['userCreationSuccess']) {
+                        echo "Úspešne ste vytvorili používateľa.";
+                    } else {
+                        if (isset($_SESSION['userCreationErrors'])) {
+                            foreach ($_SESSION['userCreationErrors'] as $error) {
+                                echo "<p>$error</p>";
+                            }
+
+                            unset($_SESSION['userCreationErrors']);
+                        }
+                        else{
+                            echo "Pri vytváraní používateľa nastala chyba.";
+                        }
+                    }
+                    ?>
+                </div>
+                <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -81,7 +155,13 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-header">
-                    <h3 class="modal-title w-100" id="deletionSuccessModalLabel"><?php echo translate("ÚSPEŠNE VYMAZANÉ"); ?></h3>
+                    <?php
+                    if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']) {
+                        echo '<h3 class="modal-title w-100" id="deletionSuccessModalLabel"><?php echo translate("ÚSPEŠNE VYMAZANÉ"); ?></h3>';
+                    } else {
+                        echo '<h3 class="modal-title w-100" id="deletionSuccessModalLabel"><?php echo translate("VYMAZANIE NEBOLO ÚSPEŠNÉ"); ?></h3>';
+                    }
+                    ?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
@@ -104,7 +184,13 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-header">
-                    <h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel"><?php echo translate("ÚSPEŠNE ZMENENÉ"); ?></h3>
+                    <?php
+                    if (isset($_SESSION['roleUpdateSuccess']) && $_SESSION['roleUpdateSuccess']) {
+                        echo '<h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel"><?php echo translate("ÚSPEŠNE ZMENENÉ"); ?></h3>';
+                    } else {
+                        echo '<h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel"><?php echo translate("ZMENA NEBOLA ÚSPEŠNÁ"); ?></h3>';
+                    }
+                    ?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
@@ -112,7 +198,16 @@ $result = $conn->query($sql);
                     if (isset($_SESSION['roleUpdateSuccess']) && $_SESSION['roleUpdateSuccess']) {
                         echo translate("Uspešne ste zmenili používateľa."); 
                     } else {
-                        echo translate("Pri menení informácií o používateľovi nastala chyba.");
+                        if (isset($_SESSION['roleUpdateErrors'])) {
+                            foreach ($_SESSION['roleUpdateErrors'] as $error) {
+                                echo "<p>$error</p>";
+                            }
+
+                            unset($_SESSION['roleUpdateErrors']);
+                        }
+                        else{
+                            echo translate("Pri menení informácií o používateľovi nastala chyba.");
+                        }
                     }
                     ?>
                 </div>
@@ -134,8 +229,12 @@ $result = $conn->query($sql);
                     <form action="editUser.php" method="post" class="p-0 m-0 shadow-none">
                         <input type="hidden" id="editUserId" name="userId">
                         <div class="mb-3">
+                            <label for="editUserLogin" class="form-label">Login</label>
+                            <input type="text" class="form-control" id="editUserLogin" name="userLogin" placeholder=<?php echo translate('Nový login'); ?>>
+                        </div>
+                        <div class="mb-3">
                             <label for="editUserPassword" class="form-label"><?php echo translate("HESLO"); ?></label>
-                            <input type="password" class="form-control" id="editUserPassword" name="userPassword" placeholder="<?php echo translate("Nové heslo"); ?>">
+                            <input type="password" class="form-control" id="editUserPassword" name="userPassword" placeholder=>
                         </div>
                         <div class="mb-3 b-0">
                             <label for="editUserRole" class="form-label"><?php echo translate("ROLA"); ?></label>
@@ -173,8 +272,14 @@ $result = $conn->query($sql);
                     const userId = this.getAttribute('data-user-id');
                     const userLogin = this.getAttribute('data-user-login');
                     document.getElementById('editUserId').value = userId;
+                    document.getElementById('editUserLogin').value = userLogin;
                     document.getElementById('editUserPassword').value = '';
                 });
+            });
+
+            document.getElementById('add-user').addEventListener('click', function(){
+                const userCreationModal = new bootstrap.Modal(document.getElementById('userCreationModal'));
+                userCreationModal.show();
             });
         });
 
@@ -188,6 +293,12 @@ $result = $conn->query($sql);
             const roleUpdateSuccessModal = new bootstrap.Modal(document.getElementById('roleUpdateSuccessModal'));
             roleUpdateSuccessModal.show();
             <?php unset($_SESSION['roleUpdateSuccess']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['userCreationSuccess'])): ?>
+            const roleUpdateSuccessModal = new bootstrap.Modal(document.getElementById('creationSuccessModal'));
+            roleUpdateSuccessModal.show();
+            <?php unset($_SESSION['userCreationSuccess']); ?>
         <?php endif; ?>
 
     </script>

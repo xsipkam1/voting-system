@@ -35,8 +35,8 @@ $translations = array(
     "ÚSPEŠNE VYMAZANÉ" => "SUCCESSFULLY DELETED",
     "Uspešne ste odstránili používateľa." => "User successfully deleted.",
     "Pri odstráňovaní používateľa nastala chyba." => "An error occurred while deleting the user.",
-    "ÚSPEŠNE ZMENENÉ" => "SECCESSFULLY UPDATED",
-    "ZMENA NEBOLA ÚSPEŠNÁ" => "NOT SECCESSFULLY UPDATED",
+    "ÚSPEŠNE ZMENENÉ" => "SUCCESSFULLY UPDATED",
+    "ZMENA NEBOLA ÚSPEŠNÁ" => "NOT SUCCESSFULLY UPDATED",
     "Pri menení informácií o používateľovi nastala chyba." => "An error occurred while updating user information.",
     "Uspešne ste zmenili používateľa." => "User successfully updated.",
     "UPRAVIŤ POUŽÍVATEĽA" => "EDIT USER",
@@ -79,6 +79,11 @@ $translations = array(
     "Nový login" => "New login",
     "Úspešne ste odstránili otázku" => "Question successfully deleted",
     "Pri odstráňovaní otázky nastala chyba." => "An error occurred while deleting the question.",
+    "ROZBALIŤ" => "EXPAND",
+    "ÚSPEŠNE ZKOPIROVANÉ" => "SUCCESSFULLY COPIED",
+    "KOPÍROVANIE NEBOLO ÚSPEŠNÉ" => "NOT SUCCESSFULLY COPIED",
+    "Úspešne ste skopírovali otázku." => "You successfully copied the question.",
+    "Pri kopírovaní otázky nastala chyba." => "An error occurred while copying the question.",
 
 );
 

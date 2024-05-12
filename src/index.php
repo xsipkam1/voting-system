@@ -175,6 +175,35 @@ function getUsername($userId, $conn) {
                 </div>
             </div>
 
+            <div class="modal fade" id="copyQuestionSuccessModal" tabindex="-1" aria-labelledby="copyQuestionSuccessModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <?php
+                            if (isset($_SESSION['copyQuestionSuccess']) && $_SESSION['copyQuestionSuccess']) {
+                                echo '<h3 class="modal-title w-100" id="copyQuestionSuccessModalLabel">'.translate('ÚSPEŠNE ZKOPIROVANÉ').'</h3>';
+                            } else {
+                                echo '<h3 class="modal-title w-100" id="copyQuestionSuccessModalLabel">'.translate('KOPÍROVANIE NEBOLO ÚSPEŠNÉ').'</h3>';
+                            }
+                            ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <?php
+                            if (isset($_SESSION['copyQuestionSuccess']) && $_SESSION['copyQuestionSuccess']) {
+                                echo translate("Úspešne ste skopírovali otázku.");
+                            } else {
+                                echo translate("Pri kopírovaní otázky nastala chyba.");
+                            }
+                            ?>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="questions">
                 <?php
@@ -228,7 +257,7 @@ function getUsername($userId, $conn) {
                                 echo "<hr>";
 
                                 $collapseId = "collapse" . $row['id'];
-                                echo "<button class='btn btn-secondary mb-2' type='button' data-bs-toggle='collapse' data-bs-target='#$collapseId' aria-expanded='false' aria-controls='$collapseId'><i class='bi bi-chevron-down'></i> ROZBALIŤ</button>";
+                                echo "<button class='btn btn-secondary mb-2' type='button' data-bs-toggle='collapse' data-bs-target='#$collapseId' aria-expanded='false' aria-controls='$collapseId'><i class='bi bi-chevron-down'></i>" . translate("ROZBALIŤ") . "</button>";
 
                                 echo "<div class='collapse' id='$collapseId'>";
                                     echo "<p class='fs-6 mb-1'>" . translate('Predmet') . ": " . $row['subject'] . "</p>";
@@ -236,7 +265,10 @@ function getUsername($userId, $conn) {
                                     echo "<p class='fs-6'>" . translate('Aktívna') . ": " . ($row['active'] ? translate('áno') : translate('nie')) . "</p>";
                                     echo "<div class='d-flex question-buttons '>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-pen'></i> " . translate('UPRAVIŤ') . "</button>";
-                                        echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
+                                        echo "<form action='copyQuestion.php' method='post' class='p-0 m-0'>";
+                                            echo "<input type='hidden' name='questionId' id='deleteQuestionId' value='" . $row['id'] . "'>";
+                                            echo "<button type= 'submit' class='btn btn-outline-secondary h6 me-1'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
+                                        echo "</form>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='deleteQuestion(".$row['id'].")'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
                                         echo "<button class='btn btn-outline-secondary h6'><i class='bi bi-door-closed'></i> " . translate('UZATVORIŤ HLASOVANIE') . "</button>";
@@ -298,10 +330,17 @@ function getUsername($userId, $conn) {
             modal.show();
         }
 
+
         <?php if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']): ?>
             const deletionSuccessModal = new bootstrap.Modal(document.getElementById('deletionSuccessModal'));
             deletionSuccessModal.show();
             <?php unset($_SESSION['deletionSuccess']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['copyQuestionSuccess']) && $_SESSION['copyQuestionSuccess']): ?>
+            const copySuccessModal = new bootstrap.Modal(document.getElementById('copyQuestionSuccessModal'));
+            copySuccessModal.show();
+            <?php unset($_SESSION['copyQuestionSuccess']); ?>
         <?php endif; ?>
 
 

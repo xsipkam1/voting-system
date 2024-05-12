@@ -18,7 +18,6 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
                 </li>
 
                 <li class="nav-item">
-                    <span> <?php translate('Jazyk'); ?>:</span>
                     <a href="?lang=sk" class="nav-link"><img src="https://www.geonames.org/flags/x/sk.gif" alt="Slovensky" style="width: 20px; height: auto;"></a>
                     <a href="?lang=en" class="nav-link"><img src="https://www.geonames.org/flags/x/gb.gif" alt="English" style="width: 20px; height: auto;"></a>
                 </li>

@@ -58,8 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Answers</title>
+    <title>Odpovede</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -84,8 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result_question = mysqli_stmt_get_result($stmt_question);
 
         if ($row_question = mysqli_fetch_assoc($result_question)) {
-            echo "<span class='fs-5 text-muted'>" . $row_question['description'] . "</span>";
-            echo "</h3>";
 
             $sql_answers = "SELECT * FROM answers WHERE question_fk = ?";
             $stmt_answers = mysqli_prepare($conn, $sql_answers);
@@ -98,6 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $totalVotes += $row_answer['votes'];
             }
 
+            echo "<div class='bg-white p-5 shadow border border-light'>";
+            echo "<h3 class='text-center'>" . $row_question['description'] . " <span class='text-muted'>(počet odpovedí: " . $totalVotes . ")</span></h3>";
             mysqli_data_seek($result_answers, 0);
             while ($row_answer = mysqli_fetch_assoc($result_answers)) {
                 $percentage = ($row_answer['votes'] / $totalVotes) * 100;
@@ -108,15 +109,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "</div>";
                 echo "</div>";
             }
+            echo "</div>";
 
             mysqli_stmt_close($stmt_answers);
         } else {
-            echo "Question not found!";
+            echo "<h3 class='text-center'>Otázka sa nenašla</h3>";
         }
 
         mysqli_stmt_close($stmt_question);
     } else {
-        echo "Question ID not found!";
+        echo "<h3 class='text-center'>ID otázky sa nenašlo</h3>";
     }
 
     mysqli_stmt_close($stmt_question_fk);

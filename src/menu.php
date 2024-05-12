@@ -12,11 +12,10 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
             <div class="container-fluid">
                 
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link active mx-3" aria-current="page" id="domov-link"><i class="bi bi-house"></i><?php echo translate('Domov'); ?></a>
+                    <a href="index.php" class="nav-link active mx-3" aria-current="page" id="domov-link"><i class="bi bi-house"></i> <?php echo translate('Domov'); ?></a>
                 </li>
 
                 <li class="nav-item">
-                    <span> <?php echo translate('Jazyk'); ?>:</span>
                     <a <?php echo ($currentLanguage == 'sk') ? 'class="nav-link inactive"' : 'class="nav-link"'; ?> href="?lang=sk"><img src="https://www.geonames.org/flags/x/sk.gif" alt="Slovensky" style="width: 20px; height: auto;"></a>
                     <a <?php echo ($currentLanguage == 'en') ? 'class="nav-link inactive"' : 'class="nav-link"'; ?> href="?lang=en"><img src="https://www.geonames.org/flags/x/gb.gif" alt="English" style="width: 20px; height: auto;"></a>
                 </li>

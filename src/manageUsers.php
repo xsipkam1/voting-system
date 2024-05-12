@@ -27,8 +27,8 @@ $result = $conn->query($sql);
     <?php include "menu.php"; ?>
 
     <div class="container p-1 mt-4">
-        <h2 class="mb-4"><?php echo translate('SPRÁVA POUŽÍVATEĽOV'); ?></h2>
-        <button type="button" id="add-user" class="btn border border-secondary">+ <?php echo translate('Pridať používateľa'); ?></button>
+        <h2 class="mb-2"><?php echo translate('SPRÁVA POUŽÍVATEĽOV'); ?></h2>
+        <div class="d-flex justify-content-end"><button type="button" id="add-user" class="btn border border-secondary mb-1">+ <?php echo translate('Pridať používateľa'); ?></button></div>
         <table class="table border shadow table-striped text-center">
             <thead>
                 <tr class="first-row">
@@ -62,29 +62,29 @@ $result = $conn->query($sql);
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <h3 class="modal-title w-100" id="userCreationModalLabel">VYTVORIŤ POUŽÍVATEĽA</h3>
+                    <h3 class="modal-title w-100" id="userCreationModalLabel"><?php echo translate('VYTVORIŤ POUŽÍVATEĽA'); ?></h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form action="createUser.php" method="post" class="p-0 m-0 shadow-none">
                         <div class="mb-3">
                             <label for="createUserLogin" class="form-label">Login</label>
-                            <input type="text" class="form-control" id="createUserLogin" name="userLogin" placeholder="Login">
+                            <input type="text" class="form-control" id="createUserLogin" name="userLogin">
                         </div>
                         <div class="mb-3">
-                            <label for="createUserPassword" class="form-label">Heslo</label>
-                            <input type="password" class="form-control" id="createUserPassword" name="userPassword" placeholder="Heslo">
+                            <label for="createUserPassword" class="form-label"><?php echo translate('Heslo'); ?></label>
+                            <input type="password" class="form-control" id="createUserPassword" name="userPassword">
                         </div>
                         <div class="mb-3 b-0">
-                            <label for="createUserRole" class="form-label">ROLA</label>
+                            <label for="createUserRole" class="form-label"><?php echo translate('Rola'); ?></label>
                             <select class="form-select" id="createUserRole" name="userRole">
                                 <option value="U">U</option>
                                 <option value="A">A</option>
                             </select>
                         </div>
                         <div class="text-center">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ZATVORIŤ</button>
-                            <button type="submit" class="btn btn-outline-primary">VYTVORIŤ</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate('ZATVORIŤ'); ?></button>
+                            <button type="submit" class="btn btn-outline-primary"><?php echo translate('VYTVORIŤ'); ?></button>
                         </div>
                     </form>
                 </div>
@@ -186,9 +186,9 @@ $result = $conn->query($sql);
                 <div class="modal-header">
                     <?php
                     if (isset($_SESSION['roleUpdateSuccess']) && $_SESSION['roleUpdateSuccess']) {
-                        echo '<h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel"><?php echo translate("ÚSPEŠNE ZMENENÉ"); ?></h3>';
+                        echo "<h3 class='modal-title w-100' id='roleUpdateSuccessModalLabel'> ". translate("ÚSPEŠNE ZMENENÉ") . "</h3>";
                     } else {
-                        echo '<h3 class="modal-title w-100" id="roleUpdateSuccessModalLabel"><?php echo translate("ZMENA NEBOLA ÚSPEŠNÁ"); ?></h3>';
+                        echo "<h3 class='modal-title w-100' id='roleUpdateSuccessModalLabel'> ". translate("ZMENA NEBOLA ÚSPEŠNÁ") . "</h3>";
                     }
                     ?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -233,11 +233,11 @@ $result = $conn->query($sql);
                             <input type="text" class="form-control" id="editUserLogin" name="userLogin" placeholder=<?php echo translate('Nový login'); ?>>
                         </div>
                         <div class="mb-3">
-                            <label for="editUserPassword" class="form-label"><?php echo translate("HESLO"); ?></label>
+                            <label for="editUserPassword" class="form-label"><?php echo translate("Heslo"); ?></label>
                             <input type="password" class="form-control" id="editUserPassword" name="userPassword" placeholder=>
                         </div>
                         <div class="mb-3 b-0">
-                            <label for="editUserRole" class="form-label"><?php echo translate("ROLA"); ?></label>
+                            <label for="editUserRole" class="form-label"><?php echo translate("Rola"); ?></label>
                             <select class="form-select" id="editUserRole" name="userRole">
                                 <option value="U">U</option>
                                 <option value="A">A</option>

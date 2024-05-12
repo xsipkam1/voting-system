@@ -86,11 +86,12 @@ $translations = array(
     "ROZBALIŤ" => "UNPACK",
     "VYTVORIŤ POUŽÍVATEĽA" => "CREATE USER",
     "VYTVORIŤ" => "CREATE",    "ROZBALIŤ" => "EXPAND",
-    "ÚSPEŠNE ZKOPIROVANÉ" => "SUCCESSFULLY COPIED",
+    "ÚSPEŠNE SKOPÍROVANÉ" => "SUCCESSFULLY COPIED",
     "KOPÍROVANIE NEBOLO ÚSPEŠNÉ" => "NOT SUCCESSFULLY COPIED",
     "Úspešne ste skopírovali otázku." => "You successfully copied the question.",
     "Pri kopírovaní otázky nastala chyba." => "An error occurred while copying the question.",
-
+    "UKÁŽ KÓD" => "SHOW CODE",
+    "KÓD PRE OTÁZKU" => "CODE FOR QUESTION",
 );
 
 function translate($word) {

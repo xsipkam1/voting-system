@@ -98,7 +98,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             echo "<div class='bg-white p-5 shadow border border-light'>";
-            echo "<h3 class='text-center'>" . $row_question['description'] . " <span class='text-muted'>(počet odpovedí: " . $totalVotes . ")</span></h3>";
+            echo "<h3 class='text-center'>" . $row_question['description'] . "</h3>";
+            echo "<h3 class='text-center text-muted'>(počet odpovedí: " . $totalVotes . ")</h3>";
             mysqli_data_seek($result_answers, 0);
             while ($row_answer = mysqli_fetch_assoc($result_answers)) {
                 $percentage = ($row_answer['votes'] / $totalVotes) * 100;

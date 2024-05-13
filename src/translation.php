@@ -101,6 +101,11 @@ $translations = array(
     "Odpovede" => "Answers",
     "počet odpovedí" => "number of answers",
     "ID otázky sa nenašlo" => "The question ID was not found.",
+    "Popis" => "Description",
+    "ZMENA BOLA ÚSPEŠNÁ" => "CHANGE WAS SUCCESSFUL",
+    "ZMENA NEBOLA ÚSPEŠNÁ" => "CHANGE WAS NOT SUCCESSFUL",
+    "Úspešne ste upravili otázku." => "You successfully edit the question.",
+    "Pri úprave otázky nastala chyba." => "An error occurred while editing the question."
 );
 
 function translate($word) {

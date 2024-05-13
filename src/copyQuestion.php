@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once("../../../configFinal.php");
-session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
@@ -10,8 +9,7 @@ if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && ($_SESSI
     exit;
 }
 
-function generateRandomCode() {
-    global $conn;
+function generateRandomCode($conn) {
     $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $code = '';
     do {
@@ -48,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $active = $question_row['active'];
             $note_closed = $question_row['note_closed'];
             $user_fk = $question_row['user_fk']; 
-            $code = generateRandomCode();
+            $code = generateRandomCode($conn);
             
             $insert_sql = "INSERT INTO questions (description, type, subject, date_created, date_closed, active, note_closed, user_fk, code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $insert_stmt = $conn->prepare($insert_sql);
@@ -57,20 +55,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($insert_stmt->affected_rows > 0) {
                 $new_question_id = $insert_stmt->insert_id;
-                
-                $get_answers_sql = "SELECT * FROM answers WHERE question_fk = ?";
-                $get_answers_stmt = $conn->prepare($get_answers_sql);
-                $get_answers_stmt->bind_param("i", $questionId);
-                $get_answers_stmt->execute();
-                $answers_result = $get_answers_stmt->get_result();
 
-                while ($answer_row = $answers_result->fetch_assoc()) {
-                    $answer_description = $answer_row['description'];
-                    $votes = 0;
-                    $insert_answer_sql = "INSERT INTO answers (description, votes, question_fk) VALUES (?, ?, ?)";
-                    $insert_answer_stmt = $conn->prepare($insert_answer_sql);
-                    $insert_answer_stmt->bind_param("sii", $answer_description, $votes, $new_question_id);
-                    $insert_answer_stmt->execute();
+                if ($type === "list") {
+                    $get_answers_sql = "SELECT * FROM answers WHERE question_fk = ?";
+                    $get_answers_stmt = $conn->prepare($get_answers_sql);
+                    $get_answers_stmt->bind_param("i", $questionId);
+                    $get_answers_stmt->execute();
+                    $answers_result = $get_answers_stmt->get_result();
+
+                    while ($answer_row = $answers_result->fetch_assoc()) {
+                        $answer_description = $answer_row['description'];
+                        $votes = 0;
+                        $insert_answer_sql = "INSERT INTO answers (description, votes, question_fk) VALUES (?, ?, ?)";
+                        $insert_answer_stmt = $conn->prepare($insert_answer_sql);
+                        $insert_answer_stmt->bind_param("sii", $answer_description, $votes, $new_question_id);
+                        $insert_answer_stmt->execute();
+                    }
                 }
 
                 $_SESSION['copyQuestionSuccess'] = true;

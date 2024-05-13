@@ -234,7 +234,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         };
-        xhr.open('GET', 'get_current_language.php', true); // Zmena na správnu cestu k vášmu skriptu
+        xhr.open('GET', 'getCurrentLanguage.php', true);
         xhr.send();
 
         function validateForm() {

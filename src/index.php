@@ -146,6 +146,35 @@ function getUsername($userId, $conn) {
                 </div>
             </div>
 
+            <div class="modal fade" id="editQuestionModal" tabindex="-1" aria-labelledby="editQuestionModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h3 class="modal-title w-100" id="editQuestionModalLabel"><?php echo translate('UPRAVIŤ OTÁZKU'); ?></h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="editQuestion.php" method="post">
+                                <input type="hidden" name="questionId" id="editQuestionId">
+                                <div class="mb-3">
+                                    <label for="editDescription" class="form-label"><?php echo translate('Popis'); ?>:</label>
+                                    <input type="text" class="form-control" id="editDescription" name="editDescription" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editSubject" class="form-label"><?php echo translate('Predmet'); ?>:</label>
+                                    <input type="text" class="form-control" id="editSubject" name="editSubject" required>
+                                </div>
+                                <div id="editAnswersSection" class="mb-3">
+                                    
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate('ZRUŠIŤ'); ?></button>
+                                <button type="submit" class="btn btn-outline-primary"><?php echo translate('ULOŽIŤ ZMENY'); ?></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="deletionSuccessModal" tabindex="-1" aria-labelledby="deletionSuccessModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content text-center">
@@ -204,25 +233,25 @@ function getUsername($userId, $conn) {
                 </div>
             </div>
 
-            <div class="modal fade" id="copyQuestionSuccessModal" tabindex="-1" aria-labelledby="copyQuestionSuccessModalLabel" aria-hidden="true">
+            <div class="modal fade" id="editQuestionSuccessModal" tabindex="-1" aria-labelledby="editQuestionSuccessModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content text-center">
                         <div class="modal-header">
                             <?php
-                            if (isset($_SESSION['copyQuestionSuccess']) && $_SESSION['copyQuestionSuccess']) {
-                                echo '<h3 class="modal-title w-100" id="copyQuestionSuccessModalLabel">'.translate('ÚSPEŠNE ZKOPIROVANÉ').'</h3>';
+                            if (isset($_SESSION['editQuestionSuccess']) && $_SESSION['editQuestionSuccess']) {
+                                echo '<h3 class="modal-title w-100" id="editQuestionSuccessModalLabel">'.translate('ZMENA BOLA ÚSPEŠNÁ').'</h3>';
                             } else {
-                                echo '<h3 class="modal-title w-100" id="copyQuestionSuccessModalLabel">'.translate('KOPÍROVANIE NEBOLO ÚSPEŠNÉ').'</h3>';
+                                echo '<h3 class="modal-title w-100" id="editQuestionSuccessModalLabel">'.translate('ZMENA BOLA ÚSPEŠNÁ').'</h3>';
                             }
                             ?>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-center">
                             <?php
-                            if (isset($_SESSION['copyQuestionSuccess']) && $_SESSION['copyQuestionSuccess']) {
-                                echo translate("Úspešne ste skopírovali otázku.");
+                            if (isset($_SESSION['editQuestionSuccess']) && $_SESSION['editQuestionSuccess']) {
+                                echo translate("Úspešne ste upravili otázku.");
                             } else {
-                                echo translate("Pri kopírovaní otázky nastala chyba.");
+                                echo translate("Pri úprave otázky nastala chyba.");
                             }
                             ?>
                         </div>
@@ -312,7 +341,7 @@ function getUsername($userId, $conn) {
                                     echo "<p class='fs-6 mb-1'>" . translate('Dátum vytvorenia') . ": " . $row['date_created'] . "</p>";
                                     echo "<p class='fs-6'>" . translate('Aktívna') . ": " . ($row['active'] ? translate('áno') : translate('nie')) . "</p>";
                                     echo "<div class='d-flex question-buttons '>";
-                                        echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-pen'></i> " . translate('UPRAVIŤ') . "</button>";
+                                        echo "<button class='btn btn-outline-secondary h6 me-1' onclick='editQuestion(".$row['id'].")'><i class='bi bi-pen'></i> " . translate('UPRAVIŤ') . "</button>";
                                         echo "<form action='copyQuestion.php' method='post' class='p-0 m-0'>";
                                             echo "<input type='hidden' name='questionId' id='deleteQuestionId' value='" . $row['id'] . "'>";
                                             echo "<button type= 'submit' class='btn btn-outline-secondary h6 me-1'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
@@ -340,10 +369,9 @@ function getUsername($userId, $conn) {
             <h2><?php echo translate('Neprihlásený používateľ'); ?></h2>
         <?php endif; ?>
     </div>
-    
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-
         const codeModal = document.getElementById('codeModal');
         const codeModalBody = document.getElementById('codeModalBody');
 
@@ -388,6 +416,59 @@ function getUsername($userId, $conn) {
             modal.show();
         }
 
+        function editQuestion(questionId){
+            document.getElementById('editQuestionId').value = questionId;
+            getQuestionData(questionId);
+            const modal = new bootstrap.Modal(document.getElementById('editQuestionModal'));
+            modal.show();
+        }
+
+        function getQuestionData(questionId) {
+            $.ajax({
+                type: 'POST',
+                url: 'editQuestion.php',
+                data: { questionId: questionId, getData: true },
+                dataType: 'json',
+                success: function(response) {
+                    if (!response.error) {
+                        console.log(response)
+                        $('#editQuestionId').val(response.id);
+                        $('#editQuestionId').val(response.id);
+                        $('#editDescription').val(response.description);
+                        $('#editSubject').val(response.subject);
+
+                        var answers = response.answers;
+
+                        if (answers.length >= 2) {
+                            $('#editAnswersSection').empty();
+
+                            for (var i = 0; i < answers.length; i++) {
+                                var label = '<?php echo translate('Možná odpoveď'); ?>' + (i + 1) + ' :';
+                                var input = $('<input>')
+                                                .attr('type', 'text')
+                                                .addClass('form-control')
+                                                .attr('id', 'editAnswer' + (i + 1))
+                                                .attr('name', 'editAnswer' + (i + 1))
+                                                .attr('required', 'required')
+                                                .val(answers[i]);
+
+                                $('#editAnswersSection').append(
+                                    $('<label>').attr('for', 'editAnswer' + (i + 1)).addClass('form-label').text(label),
+                                    input,
+                                    $('<br>')
+                                );
+                            }
+
+                            var answersString = answers.join(', ');
+                            console.log(answersString);
+                            $('#editAnswers').val(answersString);
+                        } else {
+                            $('#editAnswersSection').empty(); 
+                        }
+                    }
+                },
+            });
+        }
 
         <?php if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']): ?>
             const deletionSuccessModal = new bootstrap.Modal(document.getElementById('deletionSuccessModal'));
@@ -399,6 +480,12 @@ function getUsername($userId, $conn) {
             const copySuccessModal = new bootstrap.Modal(document.getElementById('copyQuestionSuccessModal'));
             copySuccessModal.show();
             <?php unset($_SESSION['copyQuestionSuccess']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['editQuestionSuccess']) && $_SESSION['editQuestionSuccess']): ?>
+            const copySuccessModal = new bootstrap.Modal(document.getElementById('editQuestionSuccessModal'));
+            copySuccessModal.show();
+            <?php unset($_SESSION['editQuestionSuccess']); ?>
         <?php endif; ?>
 
 

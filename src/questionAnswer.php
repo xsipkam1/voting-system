@@ -30,10 +30,7 @@ include_once 'translation.php';
 
             $selectedAnswerId = filter_input(INPUT_POST, 'answer', FILTER_VALIDATE_INT);
             if ($selectedAnswerId === false || $selectedAnswerId === null) {
-                echo "<h3 class='text-center'>".translate('Nesprávny formát kľúča!')."</h3>";
-                echo '<div class="text-center">';
-                echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
-                echo '</div>';
+                echo "<h3 class='text-center'>".translate('Nesprávny formát odpovede!')."</h3>";
                 exit;
             }
 
@@ -48,9 +45,6 @@ include_once 'translation.php';
             $questionId = $_POST['questionId'];
             if (strlen($freeAnswer) > 255) {
                 echo "<h3 class='text-center'>".translate('Nesprávny formát odpovede!')."</h3>";
-                echo '<div class="text-center">';
-                echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
-                echo '</div>';
                 exit;
             }
 
@@ -79,9 +73,6 @@ include_once 'translation.php';
             }
         } else {
             echo "<h3 class='text-center'>".translate('Nesprávny formát odpovede!')."</h3>";
-            echo '<div class="text-center">';
-            echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
-            echo '</div>';
             exit;
         }
     }

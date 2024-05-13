@@ -351,9 +351,12 @@ function getUsername($userId, $conn) {
             const button = event.relatedTarget;
             const questionId = button.getAttribute('data-question-id');
             codeModalBody.textContent = questionId;
-            const img = document.createElement('img');
-            img.src = 'codes/' + questionId + '.png';
-            document.getElementById('show-qr').appendChild(img);
+            const existingImg = document.querySelector('#show-qr img');
+            if (!existingImg) {
+                const img = document.createElement('img');
+                img.src = 'codes/' + questionId + '.png';
+                document.getElementById('show-qr').appendChild(img);
+            }
         });
 
         function filterQuestions() {

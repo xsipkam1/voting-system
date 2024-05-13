@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $qr = Builder::create()
             ->writer(new PngWriter())
-            ->data('https://node106.webte.fei.stuba.sk/itneverends/src/question/' . $code)
+            ->data('https://node106.webte.fei.stuba.sk/webte2-final/src/question/' . $code)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(ErrorCorrectionLevel::High)
             ->size(300)

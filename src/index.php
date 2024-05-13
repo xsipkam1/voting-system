@@ -433,7 +433,7 @@ function getUsername($userId, $conn) {
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='deleteQuestion(".$row['id'].")'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
                                         echo "<form action='getQuestionResults.php' method='POST'>";
                                             echo "<input type='hidden' name='questionId' id='questionIdField".$row['id']."' value='".$row['id']."'>";
-                                            echo "<button type='submit' class='btn btn-outline-secondary h6 me-1'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
+                                            echo "<button type='submit' class='btn btn-outline-secondary h6 me-1 w-100'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
                                         echo "</form>";
                                         if ($row['note_closed'] === NULL){echo "<button class='btn btn-outline-secondary h6' onclick='closeQuestionVoting(".$row['id'].")'><i class='bi bi-door-closed'></i> " . translate('UZATVORIŤ HLASOVANIE') . "</button>";}
                                     echo "</div>";

@@ -119,7 +119,25 @@ $translations = array(
     "ZMENIŤ HESLO" => "CHANGE PASSWORD",
     "ZMENIŤ" => "CHANGE",
     "UPRAVIŤ OTÁZKU" => "EDIT QUESTION",
-    "ULOŽIŤ ZMENY" => "SAVE CHANGES"
+    "ULOŽIŤ ZMENY" => "SAVE CHANGES",
+    "Používatelská príručka" => "User manual",
+    "Čo ktorá rola umožnuje:" => "What does each role allow:",
+    "Prihlásený používateľ" => "Logged in user",
+    "Registráciu a prihlásenie pomocou tlačidiel v menu, a následným vyplnením údajov." => "Registration and login using buttons in the menu, followed by filling in the login details.",
+    "Prístup k používateľskej príručke." => "Access to the user manual.",
+    "Zmenu jazyka kliknutím na vlajky v menu." => "Change language by clicking on flags in the menu.",
+    "Prístup na stránku s hlasovacou otázkou: načítaním QR kódu, vložením kódu do URL alebo napísaním kódu do vstupného pola na domovskej stránke." => "Access the page with the voting question: by scanning the QR code, entering the code into the URL, or typing the code into the input field on the homepage.",
+    "Prístup na stránku so zobrazenými výsledkami hlasovania po hlasovaní v otázke." => "Access to the page with displayed voting results after voting on the question.",
+    "Zmenu svojho hesla a odhlásenie pomocou tlačidiel v menu." => "Change your password and log out using buttons in the menu.",
+    "Vytvorenie otázok dvoch typov: výber odpovede a otvorená odpoveď." => "Creating questions of two types: multiple choice and open-ended.",
+    "Vidieť zoznam všetkých svojich otázok a filtrovať ich pomocou predmetu a dátumu vytvorenia." => "View a list of all your questions and filter them by subject and creation date.",
+    "Vygenerovať kód a QR pre hlasovanie v otázke." => "Generate a code and QR for voting on the question.",
+    "Úpravu, vymazanie a kopírovanie už definovaných otázok." => "Editing, deleting, and copying of already defined questions.",
+    "Uzavretie otázky a zobrazenie výsledkov hlasovania." => "Closing the question and displaying the voting results.",
+    "Export otázok a odpovedí do JSON-u." => "Export questions and answers to JSON.",
+    "Všetku funkcionalitu prihláseného používateľa." => "All functionality of the logged-in user.",
+    "Vidieť zoznam všetkých (nie len svojich) otázok a filtrovať ich pomocou predmetu, dátumu vytvorenia a používateľa." => "View a list of all (not just your own) questions and filter them by subject, creation date, and user.",
+    "Správu používateľov, čo zahrňuje vytváranie, úpravu a vymazávanie používateľov." => "User management, including creating, editing, and deleting users.",
 );
 
 function translate($word) {

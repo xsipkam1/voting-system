@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../../../configFinal.php");
+include_once 'translation.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['answer'])) {
@@ -58,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Odpovede</title>
+    <title><?php echo translate('Odpovede'); ?></title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -99,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             echo "<div class='bg-white p-5 shadow border border-light'>";
             echo "<h3 class='text-center'>" . $row_question['description'] . "</h3>";
-            echo "<h3 class='text-center text-muted'>(počet odpovedí: " . $totalVotes . ")</h3>";
+            echo "<h3 class='text-center text-muted'>(" . translate("počet odpovedí") . ": " . $totalVotes . ")</h3>";
             mysqli_data_seek($result_answers, 0);
             while ($row_answer = mysqli_fetch_assoc($result_answers)) {
                 $percentage = ($row_answer['votes'] / $totalVotes) * 100;
@@ -114,12 +115,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             mysqli_stmt_close($stmt_answers);
         } else {
-            echo "<h3 class='text-center'>Otázka sa nenašla</h3>";
+            echo "<h3 class='text-center'>".translate('Otázka sa nenašla')."</h3>";
         }
 
         mysqli_stmt_close($stmt_question);
     } else {
-        echo "<h3 class='text-center'>ID otázky sa nenašlo</h3>";
+        echo "<h3 class='text-center'>".translate('ID otázky sa nenašlo')."</h3>";
     }
 
     mysqli_stmt_close($stmt_question_fk);

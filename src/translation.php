@@ -92,6 +92,15 @@ $translations = array(
     "Pri kopírovaní otázky nastala chyba." => "An error occurred while copying the question.",
     "UKÁŽ KÓD" => "SHOW CODE",
     "KÓD PRE OTÁZKU" => "CODE FOR QUESTION",
+    "Otázka" => "Question",
+    "Nesprávny formát kľúča!" => "Invalid key format!",
+    "Kód otázky:" => "Question code:",
+    "Tvoja odpoveď ..." => "Your answer ...",
+    "ODPOVEDAŤ" => "ANSWER",
+    "Otázka sa nenašla" => "The question was not found",
+    "Odpovede" => "Answers",
+    "počet odpovedí" => "number of answers",
+    "ID otázky sa nenašlo" => "The question ID was not found.",
 );
 
 function translate($word) {

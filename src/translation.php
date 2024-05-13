@@ -101,6 +101,8 @@ $translations = array(
     "Odpovede" => "Answers",
     "počet odpovedí" => "number of answers",
     "ID otázky sa nenašlo" => "The question ID was not found.",
+    "Otázka nie je aktívna" => "The question is not active",
+    "Nesprávny formát odpovede!" => "Invalid answer format!",
 );
 
 function translate($word) {

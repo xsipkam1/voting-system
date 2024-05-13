@@ -3,54 +3,7 @@ session_start();
 require_once("../../../configFinal.php");
 include_once 'translation.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['answer'])) {
 
-        $selectedAnswerId = filter_input(INPUT_POST, 'answer', FILTER_VALIDATE_INT);
-        if ($selectedAnswerId === false || $selectedAnswerId === null) {
-            echo "Invalid answer ID!";
-            header("Location: index.php");
-            exit;
-        }
-
-        $sql_update_votes = "UPDATE answers SET votes = votes + 1 WHERE id = ?";
-        $stmt_update_votes = mysqli_prepare($conn, $sql_update_votes);
-        mysqli_stmt_bind_param($stmt_update_votes, "i", $selectedAnswerId);
-        mysqli_stmt_execute($stmt_update_votes);
-        mysqli_stmt_close($stmt_update_votes);
-    } elseif (isset($_POST['freeAnswer']) && !empty($_POST['freeAnswer'])) {
-
-        $freeAnswer = $_POST['freeAnswer'];
-        $questionId = $_POST['questionId'];
-        $sql_check_answer = "SELECT * FROM answers WHERE description = ? AND question_fk = ?";
-        $stmt_check_answer = mysqli_prepare($conn, $sql_check_answer);
-        mysqli_stmt_bind_param($stmt_check_answer, "si", $freeAnswer, $questionId);
-        mysqli_stmt_execute($stmt_check_answer);
-        $result_check_answer = mysqli_stmt_get_result($stmt_check_answer);
-
-        if ($row_check_answer = mysqli_fetch_assoc($result_check_answer)) {
-
-            $sql_update_votes = "UPDATE answers SET votes = votes + 1 WHERE id = ?";
-            $stmt_update_votes = mysqli_prepare($conn, $sql_update_votes);
-            mysqli_stmt_bind_param($stmt_update_votes, "i", $row_check_answer['id']);
-            mysqli_stmt_execute($stmt_update_votes);
-            mysqli_stmt_close($stmt_update_votes);
-            $selectedAnswerId = $row_check_answer['id'];
-
-        } else {
-            $sql_insert_answer = "INSERT INTO answers (description, question_fk, votes) VALUES (?, ?, 1)";
-            $stmt_insert_answer = mysqli_prepare($conn, $sql_insert_answer);
-            mysqli_stmt_bind_param($stmt_insert_answer, "si", $freeAnswer, $questionId);
-            mysqli_stmt_execute($stmt_insert_answer);
-            mysqli_stmt_close($stmt_insert_answer);
-            $selectedAnswerId = mysqli_insert_id($conn);
-        }
-    } else {
-        echo "Answer not provided!";
-        header("Location: index.php");
-        exit;
-    }
-}
 ?>
 <!doctype html>
 <html lang="sk">
@@ -72,6 +25,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php include "menu.php"; ?>
 <div class="container-md p-1 mt-4 mb-4 ">
     <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['answer'])) {
+
+            $selectedAnswerId = filter_input(INPUT_POST, 'answer', FILTER_VALIDATE_INT);
+            if ($selectedAnswerId === false || $selectedAnswerId === null) {
+                echo "<h3 class='text-center'>".translate('Nesprávny formát kľúča!')."</h3>";
+                echo '<div class="text-center">';
+                echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+                echo '</div>';
+                exit;
+            }
+
+            $sql_update_votes = "UPDATE answers SET votes = votes + 1 WHERE id = ?";
+            $stmt_update_votes = mysqli_prepare($conn, $sql_update_votes);
+            mysqli_stmt_bind_param($stmt_update_votes, "i", $selectedAnswerId);
+            mysqli_stmt_execute($stmt_update_votes);
+            mysqli_stmt_close($stmt_update_votes);
+        } elseif (isset($_POST['freeAnswer']) && !empty($_POST['freeAnswer'])) {
+
+            $freeAnswer = htmlspecialchars($_POST['freeAnswer'], ENT_QUOTES, 'UTF-8');
+            $questionId = $_POST['questionId'];
+            if (strlen($freeAnswer) > 255) {
+                echo "<h3 class='text-center'>".translate('Nesprávny formát odpovede!')."</h3>";
+                echo '<div class="text-center">';
+                echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+                echo '</div>';
+                exit;
+            }
+
+            $sql_check_answer = "SELECT * FROM answers WHERE description = ? AND question_fk = ?";
+            $stmt_check_answer = mysqli_prepare($conn, $sql_check_answer);
+            mysqli_stmt_bind_param($stmt_check_answer, "si", $freeAnswer, $questionId);
+            mysqli_stmt_execute($stmt_check_answer);
+            $result_check_answer = mysqli_stmt_get_result($stmt_check_answer);
+
+            if ($row_check_answer = mysqli_fetch_assoc($result_check_answer)) {
+
+                $sql_update_votes = "UPDATE answers SET votes = votes + 1 WHERE id = ?";
+                $stmt_update_votes = mysqli_prepare($conn, $sql_update_votes);
+                mysqli_stmt_bind_param($stmt_update_votes, "i", $row_check_answer['id']);
+                mysqli_stmt_execute($stmt_update_votes);
+                mysqli_stmt_close($stmt_update_votes);
+                $selectedAnswerId = $row_check_answer['id'];
+
+            } else {
+                $sql_insert_answer = "INSERT INTO answers (description, question_fk, votes) VALUES (?, ?, 1)";
+                $stmt_insert_answer = mysqli_prepare($conn, $sql_insert_answer);
+                mysqli_stmt_bind_param($stmt_insert_answer, "si", $freeAnswer, $questionId);
+                mysqli_stmt_execute($stmt_insert_answer);
+                mysqli_stmt_close($stmt_insert_answer);
+                $selectedAnswerId = mysqli_insert_id($conn);
+            }
+        } else {
+            echo "<h3 class='text-center'>".translate('Nesprávny formát odpovede!')."</h3>";
+            echo '<div class="text-center">';
+            echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+            echo '</div>';
+            exit;
+        }
+    }
     $sql_question_fk = "SELECT question_fk FROM answers WHERE id = ?";
     $stmt_question_fk = mysqli_prepare($conn, $sql_question_fk);
     mysqli_stmt_bind_param($stmt_question_fk, "i", $selectedAnswerId);

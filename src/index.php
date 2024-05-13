@@ -321,7 +321,7 @@ function getUsername($userId, $conn) {
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header text-center">
-                            <h3 class="modal-title w-100" id="deletionSuccessModalLabel"><?php echo translate("VÝSLEDKY HLASOVANIA"); ?></h3>
+                            <h3 class="modal-title w-100 me-1" id="deletionSuccessModalLabel"><?php echo translate("VÝSLEDKY HLASOVANIA"); ?></h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -431,9 +431,9 @@ function getUsername($userId, $conn) {
                                             echo "<button type= 'submit' class='btn btn-outline-secondary h6 w-100'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
                                         echo "</form>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='deleteQuestion(".$row['id'].")'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
-                                        echo "<form action='getQuestionResults.php' method='POST'>";
+                                        echo "<form action='getQuestionResults.php' method='POST' class='me-1'>";
                                             echo "<input type='hidden' name='questionId' id='questionIdField".$row['id']."' value='".$row['id']."'>";
-                                            echo "<button type='submit' class='btn btn-outline-secondary h6 me-1 w-100'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
+                                            echo "<button type='submit' class='btn btn-outline-secondary h6 w-100'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
                                         echo "</form>";
                                         if ($row['note_closed'] === NULL){echo "<button class='btn btn-outline-secondary h6' onclick='closeQuestionVoting(".$row['id'].")'><i class='bi bi-door-closed'></i> " . translate('UZATVORIŤ HLASOVANIE') . "</button>";}
                                     echo "</div>";

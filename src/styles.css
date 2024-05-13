@@ -153,6 +153,9 @@ form input[type="submit"]:hover {
     .question-buttons button {
         margin-right: 0 !important;
     }
+    .question-buttons form {
+        margin-right: 0 !important;
+    }
 }
 
 @media (max-width: 469px) {

@@ -76,7 +76,7 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                <i class="bi bi-person-lock me-2"></i>  ZMENIŤ HESLO
+                                <i class="bi bi-person-lock me-2"></i>  <?php echo translate('ZMENIŤ HESLO'); ?>
                             </button>
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordion">
@@ -92,7 +92,7 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
                                         <input type="password" id="repeat_password" name="repeat_password">
                                     </div>
                                     <div class="buttons">
-                                        <input type="submit" value="<?php echo translate('Zmeniť'); ?>">
+                                        <input type="submit" value="<?php echo translate('ZMENIŤ'); ?>">
                                     </div>
                                 </form>
                             </div>

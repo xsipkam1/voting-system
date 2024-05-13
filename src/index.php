@@ -147,14 +147,14 @@ function getUsername($userId, $conn) {
             </div>
 
             <div class="modal fade" id="editQuestionModal" tabindex="-1" aria-labelledby="editQuestionModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header text-center">
                             <h3 class="modal-title w-100" id="editQuestionModalLabel"><?php echo translate('UPRAVIŤ OTÁZKU'); ?></h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="editQuestion.php" method="post">
+                            <form action="editQuestion.php" method="post" class="shadow-none">
                                 <input type="hidden" name="questionId" id="editQuestionId">
                                 <div class="mb-3">
                                     <label for="editDescription" class="form-label"><?php echo translate('Popis'); ?>:</label>
@@ -167,8 +167,10 @@ function getUsername($userId, $conn) {
                                 <div id="editAnswersSection" class="mb-3">
                                     
                                 </div>
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate('ZRUŠIŤ'); ?></button>
-                                <button type="submit" class="btn btn-outline-primary"><?php echo translate('ULOŽIŤ ZMENY'); ?></button>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate('ZRUŠIŤ'); ?></button>
+                                    <button type="submit" class="btn btn-outline-primary"><?php echo translate('ULOŽIŤ ZMENY'); ?></button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -263,19 +265,17 @@ function getUsername($userId, $conn) {
             </div>
 
             <div class="modal fade" id="questionResultsModal" tabindex="-1" aria-labelledby="questionResultsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content text-center">
-                        <div class="modal-header">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
                             <h3 class="modal-title w-100" id="deletionSuccessModalLabel"><?php echo translate("VÝSLEDKY HLASOVANIA"); ?></h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body text-center">
+                        <div class="modal-body">
                             <?php
                             if (isset($_SESSION['questioResults'])) {
                                 echo $_SESSION['questioResults'];
-                            } else {
-                                echo translate("Pri odstráňovaní otázky nastala chyba.");
-                            }
+                            } 
                             ?>
                         </div>
                         <div class="modal-footer justify-content-center">

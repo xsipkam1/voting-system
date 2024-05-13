@@ -4,6 +4,13 @@ require_once("../../../configFinal.php");
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Writer\PngWriter;
+
+require_once __DIR__ . '../../../../vendor/autoload.php';
+
 if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && ($_SESSION['role'] === 'A' || $_SESSION['role'] === 'U'))) {
     header("Location: index.php");
     exit;
@@ -52,6 +59,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insert_stmt = $conn->prepare($insert_sql);
             $insert_stmt->bind_param("sssssssis", $description, $type, $subject, $date_created, $date_closed, $active, $note_closed, $user_fk, $code);
             $insert_stmt->execute();
+
+            $qr = Builder::create()
+                ->writer(new PngWriter())
+                ->data('https://node106.webte.fei.stuba.sk/itneverends/src/question/' . $code)
+                ->encoding(new Encoding('UTF-8'))
+                ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+                ->size(300)
+                ->build();
+            $qr->saveToFile(__DIR__.'/codes/' . $code . '.png');
 
             if ($insert_stmt->affected_rows > 0) {
                 $new_question_id = $insert_stmt->insert_id;

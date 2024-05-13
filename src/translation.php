@@ -113,7 +113,13 @@ $translations = array(
     "ZMENA BOLA ÚSPEŠNÁ" => "CHANGE WAS SUCCESSFUL",
     "ZMENA NEBOLA ÚSPEŠNÁ" => "CHANGE WAS NOT SUCCESSFUL",
     "Úspešne ste upravili otázku." => "You successfully edit the question.",
-    "Pri úprave otázky nastala chyba." => "An error occurred while editing the question."
+    "Pri úprave otázky nastala chyba." => "An error occurred while editing the question.",
+    "Uspešne ste zmenili svoje heslo." => "You successfully changed your password.",
+    "Pri menení hesla nastala chyba." => "An error occured while changing your password.",
+    "ZMENIŤ HESLO" => "CHANGE PASSWORD",
+    "ZMENIŤ" => "CHANGE",
+    "UPRAVIŤ OTÁZKU" => "EDIT QUESTION",
+    "ULOŽIŤ ZMENY" => "SAVE CHANGES"
 );
 
 function translate($word) {

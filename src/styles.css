@@ -57,6 +57,13 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.question-buttons form {
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: unset;
+    background-color: unset;
+    margin: 0 0;
+}
 
 form label {
     display: block;

@@ -138,6 +138,15 @@ $translations = array(
     "Všetku funkcionalitu prihláseného používateľa." => "All functionality of the logged-in user.",
     "Vidieť zoznam všetkých (nie len svojich) otázok a filtrovať ich pomocou predmetu, dátumu vytvorenia a používateľa." => "View a list of all (not just your own) questions and filter them by subject, creation date, and user.",
     "Správu používateľov, čo zahrňuje vytváranie, úpravu a vymazávanie používateľov." => "User management, including creating, editing, and deleting users.",
+    "UZATVORIŤ" => "CLOSE",
+    "POTVRĎTE UZATVORENIE" => "CONFIRM CLOSING",
+    "ÚSPEŠNE UZATVORENÉ" => "CLOSED SUCCESSFULLY",
+    "UZATVORENIE NEBOLO ÚSPEŠNÉ" => "CLOSING NOT SUCCESSFUL",
+    "Úspešne ste uzatvorili otázku" => "Closed question successfully",
+    "Pri uzatváraní otázky nastala chyba." => "An error occurred while closing the question.",
+    "Poznámka" => "Note",
+    "Dátum uzatvorenia" => "Date closed",
+    "Poznámka k uzatvoreniu" => "Closure note",
 );
 
 function translate($word) {

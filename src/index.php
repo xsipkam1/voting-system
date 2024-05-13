@@ -206,6 +206,59 @@ function getUsername($userId, $conn) {
                 </div>
             </div>
 
+            <div class="modal fade" id="confirmCloseVotingModal" tabindex="-1" aria-labelledby="confirmCloseVotingLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h3 class="modal-title w-100" id="confirmCloseVotingLabel"><?php echo translate('POTVRĎTE UZATVORENIE'); ?></h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="closeQuestionVoting.php" method="post" class="p-0 m-0 shadow-none">
+                                <input type="hidden" name="questionId" id="closeQuestionId">
+                                <div class="mb-3">
+                                    <label for="closingNote" class="form-label"><?php echo translate('Poznámka'); ?></label>
+                                    <input type="text" class="form-control" id="closingNote" name="closingNote">
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><?php echo translate('ZRUŠIŤ'); ?></button>
+                                    <button type="submit" class="btn btn-outline-danger"><?php echo translate('UZATVORIŤ'); ?></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="votingClosedSuccessModal" tabindex="-1" aria-labelledby="votingClosedSuccessModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <?php
+                            if (isset($_SESSION['votingClosedSuccess']) && $_SESSION['votingClosedSuccess']) {
+                                echo '<h3 class="modal-title w-100" id="votingClosedSuccessModalLabel">'.translate('ÚSPEŠNE UZATVORENÉ').'</h3>';
+                            } else {
+                                echo '<h3 class="modal-title w-100" id="votingClosedSuccessModalLabel">'.translate('UZATVORENIE NEBOLO ÚSPEŠNÉ').'</h3>';
+                            }
+                            ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <?php
+                            if (isset($_SESSION['votingClosedSuccess']) && $_SESSION['votingClosedSuccess']) {
+                                echo translate("Úspešne ste uzatvorili otázku");
+                            } else {
+                                echo translate("Pri uzatváraní otázky nastala chyba.");
+                            }
+                            ?>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="copyQuestionSuccessModal" tabindex="-1" aria-labelledby="copyQuestionSuccessModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content text-center">
@@ -369,6 +422,8 @@ function getUsername($userId, $conn) {
                                     echo "<p class='fs-6 mb-1'>" . translate('Predmet') . ": " . $row['subject'] . "</p>";
                                     echo "<p class='fs-6 mb-1'>" . translate('Dátum vytvorenia') . ": " . $row['date_created'] . "</p>";
                                     echo "<p class='fs-6'>" . translate('Aktívna') . ": " . ($row['active'] ? translate('áno') : translate('nie')) . "</p>";
+                                    if ($row['date_closed'] !== NULL){echo "<p class='fs-6 mb-1'>" . translate('Dátum uzatvorenia') . ": " . $row['date_closed'] . "</p>";}
+                                    if ($row['note_closed'] !== NULL){echo "<p class='fs-6'>" . translate('Poznámka k uzatvoreniu') . ": " . $row['note_closed'] . "</p>";}
                                     echo "<div class='d-flex question-buttons '>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='editQuestion(".$row['id'].")'><i class='bi bi-pen'></i> " . translate('UPRAVIŤ') . "</button>";
                                         echo "<form action='copyQuestion.php' method='post' class='p-0 m-0 me-1 bg-body shadow-none'>";
@@ -377,10 +432,10 @@ function getUsername($userId, $conn) {
                                         echo "</form>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='deleteQuestion(".$row['id'].")'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
                                         echo "<form action='getQuestionResults.php' method='POST'>";
-                                            echo "<input type='hidden' name='questionId' id='questionIdField' value='".$row['id']."'>";
+                                            echo "<input type='hidden' name='questionId' id='questionIdField".$row['id']."' value='".$row['id']."'>";
                                             echo "<button type='submit' class='btn btn-outline-secondary h6 me-1'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
                                         echo "</form>";
-                                        echo "<button class='btn btn-outline-secondary h6'><i class='bi bi-door-closed'></i> " . translate('UZATVORIŤ HLASOVANIE') . "</button>";
+                                        if ($row['note_closed'] === NULL){echo "<button class='btn btn-outline-secondary h6' onclick='closeQuestionVoting(".$row['id'].")'><i class='bi bi-door-closed'></i> " . translate('UZATVORIŤ HLASOVANIE') . "</button>";}
                                     echo "</div>";
                                 echo "</div>";
                             
@@ -526,6 +581,12 @@ function getUsername($userId, $conn) {
             });
         }
 
+        function closeQuestionVoting(questionId){
+            document.getElementById('closeQuestionId').value = questionId;
+            const modal = new bootstrap.Modal(document.getElementById('confirmCloseVotingModal'));
+            modal.show();
+        }
+
         <?php if (isset($_SESSION['deletionSuccess']) && $_SESSION['deletionSuccess']): ?>
             const deletionSuccessModal = new bootstrap.Modal(document.getElementById('deletionSuccessModal'));
             deletionSuccessModal.show();
@@ -548,6 +609,12 @@ function getUsername($userId, $conn) {
             const copySuccessModal = new bootstrap.Modal(document.getElementById('editQuestionSuccessModal'));
             copySuccessModal.show();
             <?php unset($_SESSION['editQuestionSuccess']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['votingClosedSuccess'])): ?>
+            const votingClosedSuccessModal = new bootstrap.Modal(document.getElementById('votingClosedSuccessModal'));
+            votingClosedSuccessModal.show();
+            <?php unset($_SESSION['votingClosedSuccess']); ?>
         <?php endif; ?>
 
 

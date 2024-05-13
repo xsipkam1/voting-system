@@ -54,7 +54,7 @@ $code = substr($key, -5);
                 exit;
             }
 
-            echo "<h3 class='text-center'>".translate('Kód otázky:') . $row['code'] . "</h3>";
+            echo "<h3 class='text-center'>".translate('Kód otázky:') . " " . $row['code'] . "</h3>";
             echo "<hr>";
             if ($row['type'] === 'list') {
                 echo "<p class='fs-5 mb-2'>" . $row['description'] . "</p>";

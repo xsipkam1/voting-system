@@ -240,7 +240,7 @@ function getUsername($userId, $conn) {
                             <h3 class="modal-title w-100" id="codeModalLabel"><?php echo translate('KÓD PRE OTÁZKU'); ?></h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body text-center">
+                        <div class="modal-body text-center" id="show-qr">
                             <h2 id="codeModalBody"></h2>
                             
                         </div>
@@ -351,6 +351,9 @@ function getUsername($userId, $conn) {
             const button = event.relatedTarget;
             const questionId = button.getAttribute('data-question-id');
             codeModalBody.textContent = questionId;
+            const img = document.createElement('img');
+            img.src = 'codes/' + questionId + '.png';
+            document.getElementById('show-qr').appendChild(img);
         });
 
         function filterQuestions() {

@@ -337,7 +337,25 @@ function getUsername($userId, $conn) {
             </div>
 
         <?php else : ?>
-            <h2><?php echo translate('Neprihlásený používateľ'); ?></h2>
+        <h2><?php echo translate('Neprihlásený používateľ'); ?></h2>
+        <form id="codeForm" method="GET" onsubmit="submitForm()">
+            <div class="list-question">
+                <div class="detail">
+                    <h2><?php echo translate('Zadaj vstupný kód:'); ?></h2>
+                    <label><input type="text" id="code" name="code" maxlength="5"
+                                  class="form-control text-center"></label>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-outline-secondary"><?php echo translate('Potvrdiť'); ?></button>
+                </div>
+            </div>
+        </form>
+        <script>
+            function submitForm() {
+                var code = document.getElementById("code").value;
+                document.getElementById("codeForm").action = "question/" + code;
+            }
+        </script>
         <?php endif; ?>
     </div>
     

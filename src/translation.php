@@ -103,6 +103,8 @@ $translations = array(
     "ID otázky sa nenašlo" => "The question ID was not found.",
     "Otázka nie je aktívna" => "The question is not active",
     "Nesprávny formát odpovede!" => "Invalid answer format!",
+    "Zadaj vstupný kód:" => "Enter the input code:",
+    "Potvrdiť" => "Confirm",
 );
 
 function translate($word) {

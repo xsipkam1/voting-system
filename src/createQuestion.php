@@ -3,6 +3,14 @@ session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Writer\PngWriter;
+
+require_once __DIR__ . '../../../../vendor/autoload.php';
+
 include_once 'translation.php';
 if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && ($_SESSION['role'] === 'A' || $_SESSION['role'] === 'U'))) {
     header("Location: index.php");
@@ -70,6 +78,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_stmt_bind_param($stmt, "ssssis", $description,  $type, $user_fk, $subject, $active,$code);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
+
+        $qr = Builder::create()
+            ->writer(new PngWriter())
+            ->data('https://node106.webte.fei.stuba.sk/webte2-final/src/question/' . $code)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->build();
+        $qr->saveToFile(__DIR__.'/codes/' . $code . '.png');
 
         $question_id = mysqli_insert_id($conn);
 

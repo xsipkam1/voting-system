@@ -34,7 +34,7 @@ $code = substr($key, -5);
         if (!preg_match('/^[a-zA-Z\/]+$/', $code)) {
             echo "<h3 class='text-center'>".translate('Nesprávny formát kľúča!')."</h3>";
             echo '<div class="text-center">';
-            echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+            echo '<a href="../index.php" class="btn btn-outline-secondary mt-3">' . translate("DOMOV") . '</a>';
             echo '</div>';
             exit;
         }
@@ -46,8 +46,15 @@ $code = substr($key, -5);
         $result = mysqli_stmt_get_result($stmt);
 
         if ($row = mysqli_fetch_assoc($result)) {
+            if ($row['active'] === 0) {
+                echo "<h3 class='text-center'>".translate('Otázka nie je aktívna')."</h3>";
+                echo '<div class="text-center">';
+                echo '<a href="../index.php" class="btn btn-outline-secondary mt-3">' . translate("DOMOV") . '</a>';
+                echo '</div>';
+                exit;
+            }
 
-            echo "<h3 class='text-center'>".translate('Kód otázky:') . $row['code'] . "</h3>";
+            echo "<h3 class='text-center'>".translate('Kód otázky:') . " " . $row['code'] . "</h3>";
             echo "<hr>";
             if ($row['type'] === 'list') {
                 echo "<p class='fs-5 mb-2'>" . $row['description'] . "</p>";
@@ -82,7 +89,7 @@ $code = substr($key, -5);
         } else {
             echo "<h3 class='text-center'>".translate('Otázka sa nenašla')."</h3>";
             echo '<div class="text-center">';
-            echo '<a href="index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+            echo '<a href="../index.php" class="btn btn-outline-secondary mt-3">' . translate("DOMOV") . '</a>';
             echo '</div>';
         }
 

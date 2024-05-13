@@ -256,7 +256,30 @@ function getUsername($userId, $conn) {
                             ?>
                         </div>
                         <div class="modal-footer justify-content-center">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="questionResultsModal" tabindex="-1" aria-labelledby="questionResultsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h3 class="modal-title w-100" id="deletionSuccessModalLabel"><?php echo translate("VÝSLEDKY HLASOVANIA"); ?></h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <?php
+                            if (isset($_SESSION['questioResults'])) {
+                                echo $_SESSION['questioResults'];
+                            } else {
+                                echo translate("Pri odstráňovaní otázky nastala chyba.");
+                            }
+                            ?>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">OK</button>
                         </div>
                     </div>
                 </div>
@@ -269,7 +292,7 @@ function getUsername($userId, $conn) {
                             <h3 class="modal-title w-100" id="codeModalLabel"><?php echo translate('KÓD PRE OTÁZKU'); ?></h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body text-center">
+                        <div class="modal-body text-center" id="show-qr">
                             <h2 id="codeModalBody"></h2>
                             
                         </div>
@@ -333,21 +356,30 @@ function getUsername($userId, $conn) {
                                 echo "<hr>";
 
                                 $collapseId = "collapse" . $row['id'];
+                                echo "<div class='d-flex three-buttons'>";
                                 echo "<button class='btn btn-secondary mb-2 me-1' type='button' data-bs-toggle='collapse' data-bs-target='#$collapseId' aria-expanded='false' aria-controls='$collapseId'><i class='bi bi-chevron-down'></i> " . translate('ROZBALIŤ') . "</button>";
-                                echo "<button class='btn btn-secondary mb-2' type='button' data-bs-toggle='modal' data-bs-target='#codeModal' data-question-id='" . $row['code'] . "'><i class='bi bi-unlock'></i> " . translate('UKÁŽ KÓD') . "</button>";
-                                
+                                echo "<button class='btn btn-secondary mb-2 me-1' type='button' data-bs-toggle='modal' data-bs-target='#codeModal' data-question-id='" . $row['code'] . "'><i class='bi bi-unlock'></i> " . translate('UKÁŽ KÓD') . "</button>";
+                                echo '<form method="post" action="generateJson.php" class="p-0 m-0 me-1 bg-body shadow-none">';
+                                    echo '<input type="hidden" name="question_id" value="' . $row['id'] . '">';
+                                    echo '<button type="submit" name="generate_json" class="btn btn-secondary mb-2 w-100"><i class="bi bi-filetype-json"></i> JSON EXPORT</button>';
+                                echo '</form>';
+                                echo "</div>";
+
                                 echo "<div class='collapse' id='$collapseId'>";
                                     echo "<p class='fs-6 mb-1'>" . translate('Predmet') . ": " . $row['subject'] . "</p>";
                                     echo "<p class='fs-6 mb-1'>" . translate('Dátum vytvorenia') . ": " . $row['date_created'] . "</p>";
                                     echo "<p class='fs-6'>" . translate('Aktívna') . ": " . ($row['active'] ? translate('áno') : translate('nie')) . "</p>";
                                     echo "<div class='d-flex question-buttons '>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='editQuestion(".$row['id'].")'><i class='bi bi-pen'></i> " . translate('UPRAVIŤ') . "</button>";
-                                        echo "<form action='copyQuestion.php' method='post' class='p-0 m-0'>";
+                                        echo "<form action='copyQuestion.php' method='post' class='p-0 m-0 me-1 bg-body shadow-none'>";
                                             echo "<input type='hidden' name='questionId' id='deleteQuestionId' value='" . $row['id'] . "'>";
-                                            echo "<button type= 'submit' class='btn btn-outline-secondary h6 me-1'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
+                                            echo "<button type= 'submit' class='btn btn-outline-secondary h6 w-100'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
                                         echo "</form>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='deleteQuestion(".$row['id'].")'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
-                                        echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
+                                        echo "<form action='getQuestionResults.php' method='POST'>";
+                                            echo "<input type='hidden' name='questionId' id='questionIdField' value='".$row['id']."'>";
+                                            echo "<button type='submit' class='btn btn-outline-secondary h6 me-1'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
+                                        echo "</form>";
                                         echo "<button class='btn btn-outline-secondary h6'><i class='bi bi-door-closed'></i> " . translate('UZATVORIŤ HLASOVANIE') . "</button>";
                                     echo "</div>";
                                 echo "</div>";
@@ -366,7 +398,25 @@ function getUsername($userId, $conn) {
             </div>
 
         <?php else : ?>
-            <h2><?php echo translate('Neprihlásený používateľ'); ?></h2>
+        <h2 class="mb-5"><?php echo translate('Neprihlásený používateľ'); ?></h2>
+        <form id="codeForm" method="GET" onsubmit="submitForm()">
+            <div class="list-question">
+                <div class="detail">
+                    <h2><?php echo translate('Zadaj vstupný kód:'); ?></h2>
+                    <label><input type="text" id="code" name="code" maxlength="5"
+                                  class="form-control text-center"></label>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-outline-secondary"><?php echo translate('POTVRDIŤ'); ?></button>
+                </div>
+            </div>
+        </form>
+        <script>
+            function submitForm() {
+                var code = document.getElementById("code").value;
+                document.getElementById("codeForm").action = "question/" + code;
+            }
+        </script>
         <?php endif; ?>
     </div>
 
@@ -379,6 +429,12 @@ function getUsername($userId, $conn) {
             const button = event.relatedTarget;
             const questionId = button.getAttribute('data-question-id');
             codeModalBody.textContent = questionId;
+            const existingImg = document.querySelector('#show-qr img');
+            if (!existingImg) {
+                const img = document.createElement('img');
+                img.src = 'codes/' + questionId + '.png';
+                document.getElementById('show-qr').appendChild(img);
+            }
         });
 
         function filterQuestions() {
@@ -480,6 +536,12 @@ function getUsername($userId, $conn) {
             const copySuccessModal = new bootstrap.Modal(document.getElementById('copyQuestionSuccessModal'));
             copySuccessModal.show();
             <?php unset($_SESSION['copyQuestionSuccess']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['questioResults']) && $_SESSION['questioResults']): ?>
+            const questioResultsModal = new bootstrap.Modal(document.getElementById('questionResultsModal'));
+            questioResultsModal.show();
+            <?php unset($_SESSION['questioResults']); ?>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['editQuestionSuccess']) && $_SESSION['editQuestionSuccess']): ?>

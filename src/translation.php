@@ -107,6 +107,8 @@ $translations = array(
     "Potvrdiť" => "Confirm",
     "DOMOV" => "HOME",
     "POTVRDIŤ" => "CONFIRM",
+    "Nastavenia" => "Settings",
+    "NASTAVENIA" => "SETTINGS",
 );
 
 function translate($word) {

@@ -4,6 +4,11 @@ require_once("../../../configFinal.php");
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
+if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true && ($_SESSION['role'] === 'A' || $_SESSION['role'] === 'U'))) {
+    header("Location: index.php");
+    exit;
+}
+
 if (isset($_POST['generate_json'])) {
     $question_id = $_POST['question_id'];
 

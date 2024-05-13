@@ -304,18 +304,24 @@ function getUsername($userId, $conn) {
                                 echo "<hr>";
 
                                 $collapseId = "collapse" . $row['id'];
+                                echo "<div class='d-flex three-buttons'>";
                                 echo "<button class='btn btn-secondary mb-2 me-1' type='button' data-bs-toggle='collapse' data-bs-target='#$collapseId' aria-expanded='false' aria-controls='$collapseId'><i class='bi bi-chevron-down'></i> " . translate('ROZBALIŤ') . "</button>";
-                                echo "<button class='btn btn-secondary mb-2' type='button' data-bs-toggle='modal' data-bs-target='#codeModal' data-question-id='" . $row['code'] . "'><i class='bi bi-unlock'></i> " . translate('UKÁŽ KÓD') . "</button>";
-                                
+                                echo "<button class='btn btn-secondary mb-2 me-1' type='button' data-bs-toggle='modal' data-bs-target='#codeModal' data-question-id='" . $row['code'] . "'><i class='bi bi-unlock'></i> " . translate('UKÁŽ KÓD') . "</button>";
+                                echo '<form method="post" action="generateJson.php" class="p-0 m-0 me-1 bg-body shadow-none">';
+                                    echo '<input type="hidden" name="question_id" value="' . $row['id'] . '">';
+                                    echo '<button type="submit" name="generate_json" class="btn btn-secondary mb-2 w-100"><i class="bi bi-filetype-json"></i> JSON EXPORT</button>';
+                                echo '</form>';
+                                echo "</div>";
+
                                 echo "<div class='collapse' id='$collapseId'>";
                                     echo "<p class='fs-6 mb-1'>" . translate('Predmet') . ": " . $row['subject'] . "</p>";
                                     echo "<p class='fs-6 mb-1'>" . translate('Dátum vytvorenia') . ": " . $row['date_created'] . "</p>";
                                     echo "<p class='fs-6'>" . translate('Aktívna') . ": " . ($row['active'] ? translate('áno') : translate('nie')) . "</p>";
                                     echo "<div class='d-flex question-buttons '>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-pen'></i> " . translate('UPRAVIŤ') . "</button>";
-                                        echo "<form action='copyQuestion.php' method='post' class='p-0 m-0'>";
+                                        echo "<form action='copyQuestion.php' method='post' class='p-0 m-0 me-1 bg-body shadow-none'>";
                                             echo "<input type='hidden' name='questionId' id='deleteQuestionId' value='" . $row['id'] . "'>";
-                                            echo "<button type= 'submit' class='btn btn-outline-secondary h6 me-1'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
+                                            echo "<button type= 'submit' class='btn btn-outline-secondary h6 w-100'><i class='bi bi-copy'></i> " . translate('KOPÍROVAŤ') . "</button>";
                                         echo "</form>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1' onclick='deleteQuestion(".$row['id'].")'><i class='bi bi-trash3'></i> " . translate('ZMAZAŤ') . "</button>";
                                         echo "<button class='btn btn-outline-secondary h6 me-1'><i class='bi bi-bar-chart-steps'></i> " . translate('VÝSLEDKY HLASOVANIA') . "</button>";
@@ -337,7 +343,7 @@ function getUsername($userId, $conn) {
             </div>
 
         <?php else : ?>
-        <h2><?php echo translate('Neprihlásený používateľ'); ?></h2>
+        <h2 class="mb-5"><?php echo translate('Neprihlásený používateľ'); ?></h2>
         <form id="codeForm" method="GET" onsubmit="submitForm()">
             <div class="list-question">
                 <div class="detail">
@@ -346,7 +352,7 @@ function getUsername($userId, $conn) {
                                   class="form-control text-center"></label>
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="btn btn-outline-secondary"><?php echo translate('Potvrdiť'); ?></button>
+                    <button type="submit" class="btn btn-outline-secondary"><?php echo translate('POTVRDIŤ'); ?></button>
                 </div>
             </div>
         </form>

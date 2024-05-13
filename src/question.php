@@ -34,7 +34,7 @@ $code = substr($key, -5);
         if (!preg_match('/^[a-zA-Z\/]+$/', $code)) {
             echo "<h3 class='text-center'>".translate('Nesprávny formát kľúča!')."</h3>";
             echo '<div class="text-center">';
-            echo '<a href="../index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+            echo '<a href="../index.php" class="btn btn-outline-secondary mt-3">' . translate("DOMOV") . '</a>';
             echo '</div>';
             exit;
         }
@@ -49,7 +49,7 @@ $code = substr($key, -5);
             if ($row['active'] === 0) {
                 echo "<h3 class='text-center'>".translate('Otázka nie je aktívna')."</h3>";
                 echo '<div class="text-center">';
-                echo '<a href="../index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+                echo '<a href="../index.php" class="btn btn-outline-secondary mt-3">' . translate("DOMOV") . '</a>';
                 echo '</div>';
                 exit;
             }
@@ -89,7 +89,7 @@ $code = substr($key, -5);
         } else {
             echo "<h3 class='text-center'>".translate('Otázka sa nenašla')."</h3>";
             echo '<div class="text-center">';
-            echo '<a href="../index.php" class="btn btn-primary mt-3">' . translate("Domov") . '</a>';
+            echo '<a href="../index.php" class="btn btn-outline-secondary mt-3">' . translate("DOMOV") . '</a>';
             echo '</div>';
         }
 

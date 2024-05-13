@@ -105,6 +105,8 @@ $translations = array(
     "Nesprávny formát odpovede!" => "Invalid answer format!",
     "Zadaj vstupný kód:" => "Enter the input code:",
     "Potvrdiť" => "Confirm",
+    "DOMOV" => "HOME",
+    "POTVRDIŤ" => "CONFIRM",
 );
 
 function translate($word) {

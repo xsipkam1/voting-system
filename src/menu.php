@@ -12,7 +12,7 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
             <div class="container-fluid">
                 
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link active mx-3" aria-current="page" id="domov-link"><i class="bi bi-house"></i> <?php echo translate('Domov'); ?></a>
+                    <a href="index.php" class="nav-link active" aria-current="page" id="domov-link"><i class="bi bi-house"></i> </a>
                 </li>
 
                 <li class="nav-item">

@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.18    
+    ports:
+      - 8444:444
+    volumes:
+      - ./src:/var/www/nodeXX.webte.fei.stuba.sk/webte2-final  
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+
+  php:
+    build: ./.docker/php
+    working_dir: /var/www/nodeXX.webte.fei.stuba.sk/webte2-final
+    volumes:
+      - ./src:/var/www/nodeXX.webte.fei.stuba.sk/webte2-final
+
+  mysql:
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: tvojeheslooddb
+      # MYSQL_ROOT_HOST: "%"
+      MYSQL_USER: tvojlogin
+      MYSQL_PASSWORD: tvojeheslooddb
+      MYSQL_DATABASE: vote_system
+    volumes:
+      - ./.docker/mysql/my.cnf:/etc/mysql/mysql.cnf
+      - ./.database:/docker-entrypoint-initdb.d
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 10
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: mysql
+
+volumes:
+  mysqldata:

@@ -38,7 +38,7 @@ $currentLanguage = isset($_SESSION['currentLanguage']) ? $_SESSION['currentLangu
                             </li>
                         <?php else : ?>
                             <li class="nav-item">
-                                <a href="manual.php" class="nav-link"><i class="bi bi-book"></i> <?php echo translate('Používatelská príručka'); ?></a>
+                                <a href="manual.php" class="nav-link"><i class="bi bi-book"></i> <?php echo translate('Príručka'); ?></a>
                             </li>
                             <li class="nav-item">
                                 <a href="login.php" class="nav-link"><i class="bi bi-door-open"></i> <?php echo translate('Prihlásenie'); ?></a>

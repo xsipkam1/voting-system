@@ -25,8 +25,7 @@ include_once 'translation.php';
     <?php include "content.php"; ?>
     <form method="post" id="pdfForm" action="export_pdf.php">
         <div class="buttons">
-            <button type="submit" name="export_pdf" id="exportPdfBtn" class="btn btn-outline-secondary">Exportovať do
-                PDF
+            <button type="submit" name="export_pdf" id="exportPdfBtn" class="btn btn-outline-secondary"><?php echo translate('EXPORTOVAŤ DO PDF'); ?>
             </button>
         </div>
     </form>

@@ -121,6 +121,7 @@ $translations = array(
     "UPRAVIŤ OTÁZKU" => "EDIT QUESTION",
     "ULOŽIŤ ZMENY" => "SAVE CHANGES",
     "Používatelská príručka" => "User manual",
+    "Príručka" => "Manual",
     "Čo ktorá rola umožnuje:" => "What does each role allow:",
     "Prihlásený používateľ" => "Logged in user",
     "Registráciu a prihlásenie pomocou tlačidiel v menu, a následným vyplnením údajov." => "Registration and login using buttons in the menu, followed by filling in the login details.",
@@ -147,6 +148,7 @@ $translations = array(
     "Poznámka" => "Note",
     "Dátum uzatvorenia" => "Date closed",
     "Poznámka k uzatvoreniu" => "Closure note",
+    "EXPORTOVAŤ DO PDF" => "EXPORT TO PDF",
 );
 
 function translate($word) {

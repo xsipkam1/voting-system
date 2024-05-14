@@ -9,10 +9,13 @@ use Dompdf\Dompdf;
 if(isset($_POST['export_pdf'])) {
     $dompdf = new Dompdf;
 
+    $options = $dompdf->getOptions();
+    $options->set('defaultFont', 'Arial');
+
     ob_start();
     include 'content.php';
     $html = ob_get_clean();
-    
+
     $html = str_replace('<?php echo translate(', '<?php echo translate(\'', $html);
     $html = str_replace('); ?>', '\'); ?>', $html);
 

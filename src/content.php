@@ -1,3 +1,9 @@
+<style>
+    .pdfBody {
+        font-family: "DejaVu Sans", "Lucida Sans Unicode", sans-serif;
+    }
+</style>
+<body class="pdfBody">
 <h1><?php echo translate('Používatelská príručka'); ?></h1>
 <h2><?php echo translate('Čo ktorá rola umožnuje:'); ?></h2>
 
@@ -41,3 +47,4 @@
         </li>
     </ul>
 </div>
+</body>
